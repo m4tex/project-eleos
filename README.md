@@ -2,7 +2,8 @@
 ## Unity Version
 Use Unity 2022.1.14f1.
 ## Trello
-Trello Link: https://trello.com/invite/b/6QTBcMoo/f570d5e2ffb9affd005f47a39204bb72/project-eleos
+Trello Link: https://trello.com/b/SbPc4fb6/zombie-game
+Trello Invite: https://trello.com/invite/b/SbPc4fb6/3e3cecfb75160f8fb327893380fb7a84/zombie-game
 ## Roles
 m4tex - Lead programmer, network programmer, 
 Mazk - sound designer, programmer, playtester
