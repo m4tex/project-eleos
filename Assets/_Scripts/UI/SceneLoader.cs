@@ -1,18 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-enum GameScene
-{
-    Menu = 0,
-    Level1 =1,
-}
+using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
-    public static void LoadScene()
+    public static Transform loadingScreen;
+    public static void LoadScene(int sceneIndex)
     {
-        SceneManager.LoadSceneAsync();
+        _loadScene(sceneIndex);
+        x
+    }
+
+    private static IEnumerable _loadScene(int sceneIndex)
+    {
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        loadingScreen.GetComponentInChildren<Slider>().value = loadOperation.progress / .9f;
+        
+        
+        yield return null;
     }
 }
