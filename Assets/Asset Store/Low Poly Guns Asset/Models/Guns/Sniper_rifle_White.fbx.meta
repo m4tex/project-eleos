@@ -1,0 +1,163 @@
+fileFormatVersion: 2
+guid: 9bb8286ee6b8703489a2e8f25961a8b7
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: AWP_leg1
+    100004: AWP_leg2
+    100006: AWP_magazine
+    100008: AWP_Reload1
+    100010: AWP_Reload2
+    100012: AWP_trigger
+    100014: AWP_leg1_White
+    100016: AWP_leg2_White
+    100018: AWP_Reload1_White
+    100020: AWP_Reload2_White
+    100022: AWP_trigger_White
+    100024: AWP_magazine_White
+    400000: //RootNode
+    400002: AWP_leg1
+    400004: AWP_leg2
+    400006: AWP_magazine
+    400008: AWP_Reload1
+    400010: AWP_Reload2
+    400012: AWP_trigger
+    400014: AWP_leg1_White
+    400016: AWP_leg2_White
+    400018: AWP_Reload1_White
+    400020: AWP_Reload2_White
+    400022: AWP_trigger_White
+    400024: AWP_magazine_White
+    2300000: //RootNode
+    2300002: AWP_leg1
+    2300004: AWP_leg2
+    2300006: AWP_magazine
+    2300008: AWP_Reload1
+    2300010: AWP_Reload2
+    2300012: AWP_trigger
+    2300014: AWP_leg1_White
+    2300016: AWP_leg2_White
+    2300018: AWP_Reload1_White
+    2300020: AWP_Reload2_White
+    2300022: AWP_trigger_White
+    2300024: AWP_magazine_White
+    3300000: //RootNode
+    3300002: AWP_leg1
+    3300004: AWP_leg2
+    3300006: AWP_magazine
+    3300008: AWP_Reload1
+    3300010: AWP_Reload2
+    3300012: AWP_trigger
+    3300014: AWP_leg1_White
+    3300016: AWP_leg2_White
+    3300018: AWP_Reload1_White
+    3300020: AWP_Reload2_White
+    3300022: AWP_trigger_White
+    3300024: AWP_magazine_White
+    4300000: AWP
+    4300002: AWP_leg2
+    4300004: AWP_leg1
+    4300006: AWP_trigger
+    4300008: AWP_magazine
+    4300010: AWP_Reload1
+    4300012: AWP_Reload2
+    4300014: AWP_White
+    4300016: AWP_leg2_White
+    4300018: AWP_leg1_White
+    4300020: AWP_Reload1_White
+    4300022: AWP_Reload2_White
+    4300024: AWP_trigger_White
+    4300026: AWP_magazine_White
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: e666cd0cd19950140aaffcbb0e6b2d77, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 78ee6f36284178b4d80d768310820a98, type: 2}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,98 +1,85 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public class PlayerMovement : MonoBehaviour
 {
-    public Rigidbody rb;
-    //this is the camera trasform. It's used to determine where 'forward' is, checking the player's rotation will not work since the game object itself is not rotating.
-    //That's because it caused some collision issues like: the player starts spinning uncontrollably after a collision with rigidbodies.
-    public Transform forward;
+    public static PlayerMovement main;
 
-    public float speed = 12f;
-    public float jumpForce = 3f;
+    private Rigidbody _rb;
+    private Transform _playerCamera;
 
-    //sprint
-    public float sprintMultiplier;
-    private bool isRunning;
-    //Stamina
-    public float maxStamina, stamina;
-    public float staminaDelay, staminaDelayCounter;
+    public float walkSpeed = 12f;
+    public float jumpForce = 500f;
+    
+    public float sprintMultiplier = 1.5f;
+    private bool _isRunning;
+    
+    public float maxStamina = 5f, fatigueDelay = 3f;
+    private float _fatigueDelayCounter, _currentStamina;
 
     public Transform groundCheck;
-    public float groundDistance = 0.4f;
+    public float groundScanRange = 0.1f;
     public LayerMask groundMask;
-
-    bool isGrounded;
-
-    //Stops movement when set to false
+    private bool _isGrounded;
+    
     public bool movementLock;
 
-    //player GameObject singleton
-    public static PlayerMovement instance;
-
-    private void Awake()
+    private void Start()
     {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            print("Multiple player instances occured. Deleting the old one...");
-            Destroy(instance.gameObject);
-            instance = this;
-        }
-    }
+        _rb = GetComponent<Rigidbody>();
+        _playerCamera = GetComponentInChildren<Camera>().transform;
+    } 
+    
     private void Update()
     {
-        if (!movementLock)
-            Crouching();
+        // if (!movementLock)
+        Crouching();
         WalkingAndJumping();
     }
 
-    void WalkingAndJumping()
+    private void WalkingAndJumping()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        _isGrounded = Physics.CheckSphere(groundCheck.position, groundScanRange, groundMask);
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = forward.right * x + forward.forward * z;
+        var x = Input.GetAxis("Horizontal");
+        var z = Input.GetAxis("Vertical");
+        
+        Vector3 move = _playerCamera.right * x + _playerCamera.forward * z;
         move.y = 0;
 
-
-        if (isGrounded)
+        if (_isGrounded)
         {
-            rb.velocity = movementLock ? rb.velocity : move * speed + new Vector3(0, rb.velocity.y, 0);
-
+            _rb.velocity = movementLock ? _rb.velocity : move * walkSpeed + new Vector3(0, _rb.velocity.y, 0);
             if(Input.GetButtonDown("Jump") && !movementLock)
-                rb.AddForce(new Vector3(0, jumpForce));
+                _rb.AddForce(new Vector3(0, jumpForce));
         }
 
         //Sprint
-        if (Input.GetKeyDown(KeyCode.LeftShift) && x + z != 0 && staminaDelayCounter <= 0 && !isRunning)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && x + z != 0 && _fatigueDelayCounter <= 0 && !_isRunning)
         {
-            speed *= sprintMultiplier;
-            isRunning = true;
+            walkSpeed *= sprintMultiplier;
+            _isRunning = true;
         }
-        if (isRunning && x + z == 0)
+        if (_isRunning && x + z == 0)
         {
-            speed /= sprintMultiplier;
-            isRunning = false;
+            walkSpeed /= sprintMultiplier;
+            _isRunning = false;
         }
-        if (isRunning && stamina <= 0)
+        if (_isRunning && _currentStamina <= 0)
         {
-            speed /= sprintMultiplier;
-            isRunning = false;
-            staminaDelayCounter = staminaDelay;
+            walkSpeed /= sprintMultiplier;
+            _isRunning = false;
+            _fatigueDelayCounter = fatigueDelay;
         }
 
         //Stamina
-        if (isRunning)
-            stamina -= Time.deltaTime;
-        if (stamina < maxStamina && !isRunning)
-            stamina += Time.deltaTime / 2;
-        if (staminaDelayCounter > 0)
-            staminaDelayCounter -= Time.deltaTime;
+        if (_isRunning)
+            _currentStamina -= Time.deltaTime;
+        if (_currentStamina < maxStamina && !_isRunning)
+            _currentStamina += Time.deltaTime / 2;
+        if (_fatigueDelayCounter > 0)
+            _fatigueDelayCounter -= Time.deltaTime;
     }
 
     void Crouching()

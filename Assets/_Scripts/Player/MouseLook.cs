@@ -3,51 +3,36 @@ using UnityEngine;
 public class MouseLook : MonoBehaviour
 {
     public float mouseSensitivity = 1f;
-    //public Transform playerBody;
-    float xRotation = 0, yRotation = 0;
-    public static MouseLook instance;
+    
+    private float _xRotation = 0, _yRotation = 0;
 
-    public bool cameraLock;
-    private bool cursorLocked;
+    // public bool cameraLock;
+    // private bool _cursorLocked;
 
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Destroy(instance.gameObject);
-            instance = this;
-            print("Multiple mouse look instances occured.");
-        }
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+    void Start() => Cursor.lockState = CursorLockMode.Locked;
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        xRotation -= mouseY;
-        yRotation += mouseX;
+        _yRotation += Input.GetAxis("Mouse X") * mouseSensitivity;
+        _xRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
-        if(cameraLock && cursorLocked)
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-            cursorLocked = false;
-        }
-        else if(!cameraLock && !cursorLocked)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            cursorLocked = true;
-        }
-        if (!cameraLock)
-        {
-            transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-            //playerBody.transform.Rotate(Vector3.up * mouseX);
-        }
+        // if(cameraLock && _cursorLocked)
+        // {
+        //     Cursor.lockState = CursorLockMode.Confined;
+        //     _cursorLocked = false;
+        // }
+        // else if(!cameraLock && !_cursorLocked)
+        // {
+        //     Cursor.lockState = CursorLockMode.Locked;
+        //     _cursorLocked = true;
+        // }
+        // if (!cameraLock)
+        // {
+        // }
+        transform.localRotation = Quaternion.Euler(_xRotation, _yRotation, 0f);
     }
 
-    public void SetXRotation(float value) => xRotation = value;
+    // public void SetXRotation(float value) => _xRotation = value;
 }
