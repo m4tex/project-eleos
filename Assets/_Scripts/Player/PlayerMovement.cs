@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 public class PlayerMovement : MonoBehaviour
 {
-    public static PlayerMovement main;
+    public static PlayerMovement Main;
 
     private Rigidbody _rb;
     private Transform _playerCamera;
@@ -13,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float walkSpeed = 12f;
     public float jumpForce = 16000f;
+    public LayerMask groundScanMask;
 
-    private LayerMask _groundScanMask;
     private bool _isGrounded;
 
     [Header("Sprinting")]
@@ -31,14 +30,13 @@ public class PlayerMovement : MonoBehaviour
     public float jumpDelay = 0.1f;
     public bool movementLock;
 
-    private float _jumpDelayCounter = 0f;
+    private float _jumpDelayCounter;
     
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _playerCamera = GetComponentInChildren<Camera>().transform;
         _col = GetComponent<CapsuleCollider>();
-        _groundScanMask = 1 << LayerMask.NameToLayer("Ground");
     } 
     
     private void Update()
@@ -51,8 +49,8 @@ public class PlayerMovement : MonoBehaviour
     private void WalkingAndJumping()
     {
         //Pretty naive ground scan that doesn't account for the center point of the collider
-        _isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, _col.height / 2, 0), 
-            groundScanRange, _groundScanMask);
+        _isGrounded = Physics.CheckBox(transform.position - new Vector3(0, _col.height / 2, 0), 
+            groundScanRange, groundScanMask);
 
         var x = Input.GetAxis("Horizontal");
         var z = Input.GetAxis("Vertical");
