@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -9,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody _rb;
     private Transform _playerCamera;
-    private CapsuleCollider _col;
 
     public float walkSpeed = 12f;
     public float jumpForce = 16000f;
@@ -33,14 +31,10 @@ public class PlayerMovement : MonoBehaviour
 
     private float _jumpDelayCounter;
 
-    private GameObject _test;
-    
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _playerCamera = GetComponentInChildren<Camera>().transform;
-        _col = GetComponent<CapsuleCollider>();
-        _test = GameObject.CreatePrimitive(PrimitiveType.Sphere);
     } 
     
     private void Update()
@@ -48,23 +42,20 @@ public class PlayerMovement : MonoBehaviour
         // if (!movementLock)
         Crouching();
         WalkingAndJumping();
-        _test.transform.parent = transform;
-        _test.transform.localPosition = -new Vector3(0, _col.height / 2 - _col.radius + groundScanRange / 2, 0);
     }
 
     
     //optimize.... store precalculated instead of calculating per frame
     private void WalkingAndJumping()
     {
-        //Pretty naive ground scan that doesn't account for the center point of the collider
-        _isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, _col.height / 2 + groundScanRange + 0.01f - _col.radius, 0), 
-            _col.radius-0.01f, groundScanMask);
+        //Pretty naive ground scan that doesn't account for the actual height of the character
+        _isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), 
+            groundScanRange,groundScanMask);
         
         var x = Input.GetAxis("Horizontal");
         var z = Input.GetAxis("Vertical");
 
         Vector3 move = _playerCamera.right * x + _playerCamera.forward * z;
-        move.y = 0;
         move = Vector3.Normalize(move);
 
         if (_isGrounded && !movementLock)
