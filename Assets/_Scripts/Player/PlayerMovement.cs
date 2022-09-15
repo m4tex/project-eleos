@@ -13,8 +13,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 16000f;
     public LayerMask groundScanMask;
 
-    private bool _isGrounded;
-
     [Header("Sprinting")]
     public float sprintMultiplier = 1.5f;
     private bool _isRunning;
@@ -30,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     public bool movementLock;
 
     private float _jumpDelayCounter;
+    private Vector3 _move;
 
     private void Start()
     {
@@ -44,61 +43,71 @@ public class PlayerMovement : MonoBehaviour
         WalkingAndJumping();
     }
 
-    
     //optimize.... store precalculated instead of calculating per frame
     private void WalkingAndJumping()
     {
         //Pretty naive ground scan that doesn't account for the actual height of the character
-        _isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), 
-            groundScanRange,groundScanMask);
+        var isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundScanRange,groundScanMask);
+        //Raycast for slope check
+        Physics.Raycast(transform.position - new Vector3(0, 1, 0), Vector3.down,
+            out var slopeHit, groundScanRange + 0.2f, groundScanMask);
         
         var x = Input.GetAxis("Horizontal");
         var z = Input.GetAxis("Vertical");
 
-        Vector3 move = _playerCamera.right * x + _playerCamera.forward * z;
-        move = Vector3.Normalize(move);
+        _move = _playerCamera.right * x + _playerCamera.forward * z;
+        _move.y = 0;
+        _move.Normalize();
+        if (slopeHit.normal != Vector3.up) //If on slope...
+            _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
 
-        if (_isGrounded && !movementLock)
+        if (!isGrounded && x != 0)
         {
-            var velocity = _rb.velocity;
-            _rb.velocity = Vector3.MoveTowards( velocity, move * walkSpeed + new Vector3(0, velocity.y, 0), 
-                Time.deltaTime * friction);
-            if ((Input.GetButtonDown("Jump") || Input.mouseScrollDelta.y > 0 ) && jumpDelay <= 0)
-            {
-                velocity = new Vector3(velocity.x, 0, velocity.z);
-                _rb.velocity = velocity;
-                _rb.AddForce(new Vector3(0, jumpForce));
-                _jumpDelayCounter = jumpDelay;
-            }
+            
         }
 
+        if (!isGrounded || movementLock) return;
+        
+        var velocity = _rb.velocity;
+        _rb.velocity = Vector3.MoveTowards( velocity, _move * walkSpeed + new Vector3(0, velocity.y, 0), 
+            Time.deltaTime * friction);
+        
+        if ((Input.GetButtonDown("Jump") || Input.mouseScrollDelta.y > 0 ) && jumpDelay <= 0)
+        {
+            velocity = new Vector3(velocity.x, 0, velocity.z);
+            _rb.velocity = velocity;
+            _rb.AddForce(new Vector3(0, jumpForce));
+            _jumpDelayCounter = jumpDelay;
+        }
+
+        // MOVE TO ANOTHER FUNCTION
         //Sprint
-        if (Input.GetKeyDown(KeyCode.LeftShift) && x + z != 0 && _fatigueDelayCounter <= 0 && !_isRunning)
-        {
-            walkSpeed *= sprintMultiplier;
-            _isRunning = true;
-        }
-        else if (_isRunning && x + z == 0)
-        {
-            walkSpeed /= sprintMultiplier;
-            _isRunning = false;
-        }
-        else if (_isRunning && _currentStamina <= 0)
-        {
-            walkSpeed /= sprintMultiplier;
-            _isRunning = false;
-            _fatigueDelayCounter = fatigueDelay;
-        }
+        // if (Input.GetKeyDown(KeyCode.LeftShift) && x + z != 0 && _fatigueDelayCounter <= 0 && !_isRunning)
+        // {
+        //     walkSpeed *= sprintMultiplier;
+        //     _isRunning = true;
+        // }
+        // else if (_isRunning && x + z == 0)
+        // {
+        //     walkSpeed /= sprintMultiplier;
+        //     _isRunning = false;
+        // }
+        // else if (_isRunning && _currentStamina <= 0)
+        // {
+        //     walkSpeed /= sprintMultiplier;
+        //     _isRunning = false;
+        //     _fatigueDelayCounter = fatigueDelay;
+        // }
 
         //Stamina
-        if (_isRunning)
-            _currentStamina -= Time.deltaTime;
-        if (_currentStamina < maxStamina && !_isRunning)
-            _currentStamina += Time.deltaTime / 2;
-        if (_fatigueDelayCounter > 0)
-            _fatigueDelayCounter -= Time.deltaTime;
-        if (_jumpDelayCounter > 0)
-            _jumpDelayCounter -= Time.deltaTime;
+        // if (_isRunning)
+        //     _currentStamina -= Time.deltaTime;
+        // if (_currentStamina < maxStamina && !_isRunning)
+        //     _currentStamina += Time.deltaTime / 2;
+        // if (_fatigueDelayCounter > 0)
+        //     _fatigueDelayCounter -= Time.deltaTime;
+        // if (_jumpDelayCounter > 0)
+        //     _jumpDelayCounter -= Time.deltaTime;
     }
 
     private void Crouching()
@@ -118,10 +127,4 @@ public class PlayerMovement : MonoBehaviour
     {
         print("standing up");
     }
-
-    // private void OnDrawGizmos()
-    // {
-    //     if (_col) 
-    //         Gizmos.DrawSphere();
-    // }
 }

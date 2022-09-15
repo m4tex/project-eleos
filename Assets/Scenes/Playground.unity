@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -957,7 +957,7 @@ GameObject:
   - component: {fileID: 903407775}
   - component: {fileID: 903407774}
   - component: {fileID: 903407773}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1130,7 @@ MonoBehaviour:
   sprintMultiplier: 1.5
   maxStamina: 5
   fatigueDelay: 3
-  groundScanRange: 0.02
+  groundScanRange: 0.2
   friction: 25
   strafeAcceleration: 0.1
   jumpDelay: 0
@@ -1369,7 +1369,7 @@ GameObject:
   - component: {fileID: 1117456019}
   - component: {fileID: 1117456018}
   - component: {fileID: 1117456017}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1383,14 +1383,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117456015}
-  m_LocalRotation: {x: 0, y: 0, z: 0.2588191, w: 0.9659258}
-  m_LocalPosition: {x: 8.51, y: -0.17, z: -0.29}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268346, w: 0.9238795}
+  m_LocalPosition: {x: 9.03, y: 0.44, z: -0.29}
   m_LocalScale: {x: 5.716, y: 0.41495, z: 3.835}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 415234871}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 30}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 42.958}
 --- !u!65 &1117456017
 BoxCollider:
   m_ObjectHideFlags: 0

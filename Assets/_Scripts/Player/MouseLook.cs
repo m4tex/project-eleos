@@ -16,7 +16,7 @@ public class MouseLook : MonoBehaviour
         _yRotation += Input.GetAxis("Mouse X") * mouseSensitivity;
         _xRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
+        _xRotation = Mathf.Clamp(_xRotation, -89f, 89f);
 
         // if(cameraLock && _cursorLocked)
         // {
