@@ -8,9 +8,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody _rb;
     private Transform _playerCamera;
+    private CapsuleCollider _col;
 
     public float walkSpeed = 12f;
-    public float jumpForce = 16000f;
+    // public float jumpForce = 16000f;
     public LayerMask groundScanMask;
 
     [Header("Sprinting")]
@@ -23,8 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Extra")]
     public float groundScanRange = 0.1f;
     public float friction = 30; //Not exactly friction but I couldn't find a better name for it
-    public float strafeAcceleration = 0.1f;
-    public float jumpDelay = 0.1f;
+    // public float jumpDelay = 0.1f;
     public bool movementLock;
 
     private float _jumpDelayCounter;
@@ -34,12 +34,13 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _playerCamera = GetComponentInChildren<Camera>().transform;
+        _col = GetComponent<CapsuleCollider>();
     } 
     
     private void Update()
     {
         // if (!movementLock)
-        Crouching();
+        // Crouching();
         WalkingAndJumping();
     }
 
@@ -61,6 +62,8 @@ public class PlayerMovement : MonoBehaviour
         if (slopeHit.normal != Vector3.up) //If on slope...
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
 
+        Debug.DrawLine(transform.position + Vector3.down, transform.position + _move * 4f, Color.green, 0.25f);
+
         if (!isGrounded && x != 0)
         {
             
@@ -72,13 +75,13 @@ public class PlayerMovement : MonoBehaviour
         _rb.velocity = Vector3.MoveTowards( velocity, _move * walkSpeed + new Vector3(0, velocity.y, 0), 
             Time.deltaTime * friction);
         
-        if ((Input.GetButtonDown("Jump") || Input.mouseScrollDelta.y > 0 ) && jumpDelay <= 0)
-        {
-            velocity = new Vector3(velocity.x, 0, velocity.z);
-            _rb.velocity = velocity;
-            _rb.AddForce(new Vector3(0, jumpForce));
-            _jumpDelayCounter = jumpDelay;
-        }
+        // if ((Input.GetButtonDown("Jump") || Input.mouseScrollDelta.y > 0 ) && jumpDelay <= 0)
+        // {
+        //     velocity = new Vector3(velocity.x, 0, velocity.z);
+        //     _rb.velocity = velocity;
+        //     _rb.AddForce(new Vector3(0, jumpForce));
+        //     _jumpDelayCounter = jumpDelay;
+        // }
 
         // MOVE TO ANOTHER FUNCTION
         //Sprint
@@ -110,21 +113,33 @@ public class PlayerMovement : MonoBehaviour
         //     _jumpDelayCounter -= Time.deltaTime;
     }
 
-    private void Crouching()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-            Crouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl))
-            StandUp();
-    }
+    // private void Crouching()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.LeftControl))
+    //         Crouch();
+    //     if (Input.GetKeyUp(KeyCode.LeftControl))
+    //         StandUp();
+    // }
+    //
+    // private void Crouch()
+    // {
+    //     print("crouching");
+    // }
+    //
+    // private void StandUp()
+    // {
+    //     print("standing up");
+    // }
 
-    private void Crouch()
+    private void OnCollisionStay(Collision collisionInfo)
     {
-        print("crouching");
-    }
+        foreach (ContactPoint p in collisionInfo.contacts)
+        {
+            Vector3 bottom = transform.position - new Vector3(0, 1, 0);
+            Vector3 curve = bottom + Vector3.up * _col.radius;
 
-    private void StandUp()
-    {
-        print("standing up");
+            Vector3 dir = curve - p.point;
+            Debug.DrawLine(p.point, curve, Color.blue, 0.25f);
+        }
     }
 }
