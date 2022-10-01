@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _playerCamera = GetComponentInChildren<Camera>().transform;
+        _playerCamera.transform.name = "AAAAAAAAAA";
         _col = GetComponent<CapsuleCollider>();
     } 
     
@@ -48,9 +49,10 @@ public class PlayerMovement : MonoBehaviour
     private void WalkingAndJumping()
     {
         //Pretty naive ground scan that doesn't account for the actual height of the character
-        var isGrounded = Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundScanRange,groundScanMask);
+        var position = transform.position;
+        var isGrounded = Physics.CheckSphere(position - new Vector3(0, 1, 0), groundScanRange,groundScanMask);
         //Raycast for slope check
-        Physics.Raycast(transform.position - new Vector3(0, 1, 0), Vector3.down,
+        Physics.Raycast(position - new Vector3(0, 1, 0), Vector3.down,
             out var slopeHit, groundScanRange + 0.2f, groundScanMask);
         
         var x = Input.GetAxis("Horizontal");
@@ -58,16 +60,10 @@ public class PlayerMovement : MonoBehaviour
 
         _move = _playerCamera.right * x + _playerCamera.forward * z;
         _move.y = 0;
+        _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
         _move.Normalize();
-        if (slopeHit.normal != Vector3.up) //If on slope...
-            _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
 
-        Debug.DrawLine(transform.position + Vector3.down, transform.position + _move * 4f, Color.green, 0.25f);
-
-        if (!isGrounded && x != 0)
-        {
-            
-        }
+        Debug.DrawLine(position + Vector3.down, position + _move * 4f, Color.green, 0.25f);
 
         if (!isGrounded || movementLock) return;
         
@@ -131,15 +127,19 @@ public class PlayerMovement : MonoBehaviour
     //     print("standing up");
     // }
 
-    private void OnCollisionStay(Collision collisionInfo)
-    {
-        foreach (ContactPoint p in collisionInfo.contacts)
-        {
-            Vector3 bottom = transform.position - new Vector3(0, 1, 0);
-            Vector3 curve = bottom + Vector3.up * _col.radius;
-
-            Vector3 dir = curve - p.point;
-            Debug.DrawLine(p.point, curve, Color.blue, 0.25f);
-        }
-    }
+    // private void OnCollisionStay(Collision collisionInfo)
+    // {
+    //     foreach (var p in collisionInfo.contacts)
+    //     {
+    //         var bottom = transform.position - new Vector3(0, 1, 0);
+    //         var curve = bottom + Vector3.up * _col.radius;
+    //
+    //         var dir = curve - p.point;
+    //
+    //         print("Collision");
+    //
+    //         if (p.point.y < curve.y)
+    //             Debug.DrawLine(p.point, curve, Color.blue, 0.25f);
+    //     }
+    // }
 }
