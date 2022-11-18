@@ -5,11 +5,16 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 1f;
     
     private float _xRotation = 0, _yRotation = 0;
+    private Transform body;
 
     // public bool cameraLock;
     // private bool _cursorLocked;
 
-    void Start() => Cursor.lockState = CursorLockMode.Locked;
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        body = GetComponentInParent<PlayerMovement>().transform;
+    } 
 
     void Update()
     {
@@ -31,7 +36,8 @@ public class MouseLook : MonoBehaviour
         // if (!cameraLock)
         // {
         // }
-        transform.localRotation = Quaternion.Euler(_xRotation, _yRotation, 0f);
+        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+        body.localRotation = Quaternion.Euler(0f, _yRotation, 0f);
     }
 
     // public void SetXRotation(float value) => _xRotation = value;

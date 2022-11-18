@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -14,18 +15,19 @@ public class PlayerMovement : MonoBehaviour
     // public float jumpForce = 16000f;
     public LayerMask groundScanMask;
 
-    [Header("Sprinting")]
-    public float sprintMultiplier = 1.5f;
-    private bool _isRunning;
-    
-    public float maxStamina = 5f, fatigueDelay = 3f;
-    private float _fatigueDelayCounter, _currentStamina;
+    // [Header("Sprinting")]
+    // public float sprintMultiplier = 1.5f;
+    // private bool _isRunning = false;
+    //
+    // public float maxStamina = 5f, fatigueDelay = 3f;
+    // private float _fatigueDelayCounter, _currentStamina;
     
     [Header("Extra")]
     public float groundScanRange = 0.1f;
     public float friction = 30; //Not exactly friction but I couldn't find a better name for it
     // public float jumpDelay = 0.1f;
-    public bool movementLock;
+    public bool movementLock = false;
+    public bool debugRays = true;
 
     private float _jumpDelayCounter;
     private Vector3 _move;
@@ -34,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _playerCamera = GetComponentInChildren<Camera>().transform;
-        _playerCamera.transform.name = "AAAAAAAAAA";
         _col = GetComponent<CapsuleCollider>();
     } 
     
@@ -50,9 +51,10 @@ public class PlayerMovement : MonoBehaviour
     {
         //Pretty naive ground scan that doesn't account for the actual height of the character
         var position = transform.position;
+        var feetPosition = position + Vector3.down;
         var isGrounded = Physics.CheckSphere(position - new Vector3(0, 1, 0), groundScanRange,groundScanMask);
         //Raycast for slope check
-        Physics.Raycast(position - new Vector3(0, 1, 0), Vector3.down,
+        Physics.Raycast(feetPosition, Vector3.down,
             out var slopeHit, groundScanRange + 0.2f, groundScanMask);
         
         var x = Input.GetAxis("Horizontal");
@@ -60,10 +62,15 @@ public class PlayerMovement : MonoBehaviour
 
         _move = _playerCamera.right * x + _playerCamera.forward * z;
         _move.y = 0;
-        _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
         _move.Normalize();
+        _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
+        Debug.DrawLine(feetPosition, feetPosition + _move * 4f, Color.green, 0.1f);
 
-        Debug.DrawLine(position + Vector3.down, position + _move * 4f, Color.green, 0.25f);
+        if (debugRays)
+        {
+            Debug.DrawRay(position, _playerCamera.forward, Color.blue, 0.1f);
+        }
+        
 
         if (!isGrounded || movementLock) return;
         
@@ -142,4 +149,9 @@ public class PlayerMovement : MonoBehaviour
     //             Debug.DrawLine(p.point, curve, Color.blue, 0.25f);
     //     }
     // }
+
+    private void OnCollisionStay(Collision collisionInfo)
+    {
+        
+    }
 }
