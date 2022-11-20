@@ -16,7 +16,8 @@ namespace _Scripts.Weapons
         // public bool tiltX, tiltY, tiltZ;
 
         private Vector3 _initialPos, _initialRot;
-
+        private float mouseX, mouseY;
+        
         private void Start()
         {
             _initialPos = transform.localPosition;
@@ -25,8 +26,8 @@ namespace _Scripts.Weapons
     
         private void Update()
         {
-            var mouseX = Input.GetAxis("Mouse X");
-            var mouseY = Input.GetAxis("Mouse Y");
+            mouseX = Mathf.Lerp(mouseX, Input.GetAxis("Mouse X"), Time.deltaTime * 12f);
+            mouseY = Mathf.Lerp(mouseY, Input.GetAxis("Mouse Y"), Time.deltaTime * 12f);
     
             //Pos sway
             var moveX = Math.Clamp(mouseX * swayAmount, -maxSway, maxSway);
@@ -40,7 +41,7 @@ namespace _Scripts.Weapons
             var rotX = Math.Clamp(mouseX * tiltAmount, -maxTilt, maxTilt);
             var rotY = Math.Clamp(mouseY * tiltAmount, -maxTilt, maxTilt);
 
-            var finalRot = Quaternion.Euler(new Vector3( -(rotY + Math.Abs(rotX)), 0, rotX) + _initialRot);
+            var finalRot = Quaternion.Euler(new Vector3( -(rotY + Math.Abs(rotX) * 0.6f), 0, rotX) + _initialRot);
             transform.localRotation = 
                 Quaternion.Slerp(transform.localRotation, finalRot, Time.deltaTime * tiltSmooth);
         }

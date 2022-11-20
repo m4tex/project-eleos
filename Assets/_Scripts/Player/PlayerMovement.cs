@@ -31,21 +31,34 @@ namespace _Scripts.Player
         
         [Header("Extra")]
         public float groundScanRange = 0.1f;
-        public float friction = 30; //Not exactly friction but I couldn't find a better name for it
+        public float friction = 30f; //Not exactly friction but I couldn't find a better name for it
         // public float jumpDelay = 0.1f;
         public bool movementLock = false;
-        public bool debugRays = true;
 
         private float _jumpDelayCounter;
         private Vector3 _move;
 
         [Space] 
         
-        [Header("Camera Effects")] 
-        public float frequency;
-        public float amplitude;
+        [Header("Camera Bobbing")] 
+        public float frequency = .5f;
+        public float amplitude = 5f;
+        public float smoothBobbing = 2f;
+        public float sprintBobbingFrequencyFactor = 1.5f;
         public Transform cameraSnapPoint;
+        private float _bobbingElapsed;
+        private Vector3 _initialSnapPointPos;
 
+        [Space] 
+        
+        [Header("Dynamic FOV")] 
+        public float walkingFOV = 65;
+        public float runningFOV = 75;
+        public float fovTransitionSmooth = 10f;
+        
+        private Camera _playerCameraComponent;
+        private float _initialCameraFOV;
+        
         private void Start()
         {
             if (Camera.main == null) throw new Exception("Main Camera doesn't exist!!!");
@@ -54,15 +67,18 @@ namespace _Scripts.Player
             _playerCamera = Camera.main.transform;
             _rb = GetComponent<Rigidbody>();
             _col = GetComponent<CapsuleCollider>();
+            _initialSnapPointPos = cameraSnapPoint.localPosition;
+            _playerCameraComponent = _playerCamera.GetComponent<Camera>();
+            _initialCameraFOV = _playerCameraComponent.fieldOfView;
         } 
     
         private void Update()
         {
             WalkingAndSprint();
             Counters();
+            DynamicFOV();
         }
 
-        //optimize.... store precalculated instead of calculating per frame
         private void WalkingAndSprint()
         {
             //Pretty naive ground scan that doesn't account for the actual height of the character
@@ -70,19 +86,22 @@ namespace _Scripts.Player
             var feetPosition = position + Vector3.down;
             var isGrounded = Physics.CheckSphere(feetPosition, groundScanRange,groundScanMask);
             
+            var x = Input.GetAxis("Horizontal");
+            var z = Input.GetAxis("Vertical");
+
+            SnapPointBobbing(x, z, isGrounded);
+            
             if (!isGrounded || movementLock) return;
             
             //Raycast for slope check
             Physics.Raycast(feetPosition, Vector3.down,
                 out var slopeHit, groundScanRange + 0.2f, groundScanMask);
-        
-            var x = Input.GetAxis("Horizontal");
-            var z = Input.GetAxis("Vertical");
-
+            
             _move = _playerCamera.right * x + _playerCamera.forward * z;
             _move.y = 0;
 
             _move.Normalize();
+            
             _move += _isRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
             
@@ -91,7 +110,7 @@ namespace _Scripts.Player
 
             #region Sprinting
 
-            if (Input.GetKey(KeyCode.LeftShift) && z != 0 && _fatigueDelayCounter <= 0 && !_isRunning)
+            if (Input.GetKey(KeyCode.LeftShift) && z > 0 && _fatigueDelayCounter <= 0 && !_isRunning)
             {
                 _isRunning = true;
             }
@@ -109,6 +128,25 @@ namespace _Scripts.Player
             #endregion
         }
 
+        private void SnapPointBobbing(float inputX, float inputZ, bool isGrounded)
+        {
+            var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (_isRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
+            
+            cameraSnapPoint.localPosition = Vector3.Lerp(cameraSnapPoint.localPosition,
+                _initialSnapPointPos + new Vector3(0, yOffset, 0), Time.deltaTime * smoothBobbing);
+
+            if (inputX + inputZ == 0 || !isGrounded) _bobbingElapsed = 0;
+            else _bobbingElapsed += Time.time;
+        }
+
+        private void DynamicFOV()
+        {
+            var targetFOV = _isRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;
+            
+            _playerCameraComponent.fieldOfView = Mathf.Lerp(_playerCameraComponent.fieldOfView, targetFOV,
+                fovTransitionSmooth * Time.deltaTime);
+        }
+        
         private void Counters()
         {
             if (_isRunning)

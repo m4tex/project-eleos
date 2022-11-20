@@ -1391,6 +1391,14 @@ MonoBehaviour:
   friction: 55
   movementLock: 0
   debugRays: 1
+  frequency: 0.25
+  amplitude: 0.12
+  smoothBobbing: 3
+  sprintBobbingFrequencyFactor: 1.5
+  cameraSnapPoint: {fileID: 1335492035}
+  walkingFOV: 62
+  runningFOV: 72
+  fovTransitionSmooth: 5
 --- !u!23 &937236652
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1640,12 +1648,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26facfa183b533a06be8d4a21eee2423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSway: 0.12
+  maxSway: 0.08
   swayAmount: 0.2
-  swaySmooth: 5
+  swaySmooth: 8
   maxTilt: 10
-  tiltAmount: 5
-  tiltSmooth: 1
+  tiltAmount: 3
+  tiltSmooth: 10
 --- !u!1 &1117456015
 GameObject:
   m_ObjectHideFlags: 0
