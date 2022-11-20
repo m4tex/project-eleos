@@ -1,24 +1,25 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneLoader : MonoBehaviour
+namespace _Scripts.UI
 {
-    public static Transform loadingScreen;
-    public static void LoadScene(int sceneIndex)
+    public class SceneLoader : MonoBehaviour
     {
+        public static Transform loadingScreen;
+        public static void LoadScene(int sceneIndex)
+        {
         
-    }
+        }
 
-    private static IEnumerable _loadScene(int sceneIndex)
-    {
-        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        loadingScreen.GetComponentInChildren<Slider>().value = loadOperation.progress / .9f;
+        private static IEnumerable _loadScene(int sceneIndex)
+        {
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneIndex);
+            loadingScreen.GetComponentInChildren<Slider>().value = loadOperation.progress / .9f;
         
         
-        yield return null;
+            yield return null;
+        }
     }
 }
