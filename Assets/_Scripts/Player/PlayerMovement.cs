@@ -11,11 +11,9 @@ namespace _Scripts.Player
 
         private Rigidbody _rb;
         private Transform _playerCamera;
-        private CapsuleCollider _col;
 
         [Header("General")]
         public float walkSpeed = 12f;
-        // public float jumpForce = 16000f;
         public LayerMask groundScanMask;
 
         [Space]
@@ -32,7 +30,6 @@ namespace _Scripts.Player
         [Header("Extra")]
         public float groundScanRange = 0.1f;
         public float friction = 30f; //Not exactly friction but I couldn't find a better name for it
-        // public float jumpDelay = 0.1f;
         public bool movementLock = false;
 
         private float _jumpDelayCounter;
@@ -66,7 +63,6 @@ namespace _Scripts.Player
             Main = this;
             _playerCamera = Camera.main.transform;
             _rb = GetComponent<Rigidbody>();
-            _col = GetComponent<CapsuleCollider>();
             _initialSnapPointPos = cameraSnapPoint.localPosition;
             _playerCameraComponent = _playerCamera.GetComponent<Camera>();
             _initialCameraFOV = _playerCameraComponent.fieldOfView;
