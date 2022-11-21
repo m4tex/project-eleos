@@ -24,16 +24,6 @@ namespace _Scripts.Player
     
         public float maxStamina = 5f, fatigueDelay = 3f;
         private float _fatigueDelayCounter, _currentStamina;
-    
-        [Space]
-        
-        [Header("Extra")]
-        public float groundScanRange = 0.1f;
-        public float friction = 30f; //Not exactly friction but I couldn't find a better name for it
-        public bool movementLock = false;
-
-        private float _jumpDelayCounter;
-        private Vector3 _move;
 
         [Space] 
         
@@ -55,6 +45,16 @@ namespace _Scripts.Player
         
         private Camera _playerCameraComponent;
         private float _initialCameraFOV;
+        
+        [Space]
+        
+        [Header("Extra")]
+        public float groundScanRange = 0.1f;
+        public float friction = 30f; //Not exactly friction but I couldn't find a better name for it
+        public bool movementLock = false;
+
+        private float _jumpDelayCounter;
+        private Vector3 _move;
         
         private void Start()
         {
@@ -92,7 +92,7 @@ namespace _Scripts.Player
             //Raycast for slope check
             Physics.Raycast(feetPosition, Vector3.down,
                 out var slopeHit, groundScanRange + 0.2f, groundScanMask);
-            
+
             _move = _playerCamera.right * x + _playerCamera.forward * z;
             _move.y = 0;
 
@@ -101,7 +101,7 @@ namespace _Scripts.Player
             _move += _isRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
             
-            _rb.velocity = Vector3.MoveTowards( _rb.velocity, _move * walkSpeed, 
+            _rb.velocity = Vector3.MoveTowards( _rb.velocity, _move * (walkSpeed * StatsManager.SpeedFactor), 
                 Time.deltaTime * friction);
 
             #region Sprinting
