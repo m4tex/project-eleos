@@ -7,7 +7,7 @@ namespace _Scripts.Player
     [RequireComponent(typeof(CapsuleCollider))]
     public class PlayerMovement : MonoBehaviour
     {
-        public static PlayerMovement Main { get; set; }
+        public static PlayerMovement Main { get; private set; }
 
         private Rigidbody _rb;
         private Transform _playerCamera;
