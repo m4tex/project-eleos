@@ -1,4 +1,5 @@
 using System;
+using _Scripts.UI;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -26,8 +27,11 @@ namespace _Scripts.Weapons
     
         private void Update()
         {
-            mouseX = Mathf.Lerp(mouseX, Input.GetAxis("Mouse X"), Time.deltaTime * 12f);
-            mouseY = Mathf.Lerp(mouseY, Input.GetAxis("Mouse Y"), Time.deltaTime * 12f);
+            if (!UIManager.ControllsLock)
+            {
+                mouseX = Mathf.Lerp(mouseX, Input.GetAxis("Mouse X"), Time.deltaTime * 12f);
+                mouseY = Mathf.Lerp(mouseY, Input.GetAxis("Mouse Y"), Time.deltaTime * 12f);
+            }
     
             //Pos sway
             var moveX = Math.Clamp(mouseX * swayAmount, -maxSway, maxSway);

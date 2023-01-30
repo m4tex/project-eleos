@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.UI;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -13,7 +14,19 @@ namespace _Scripts.Player
         public static float HealthRegenFactor { get; private set; }
         public static float SpeedFactor { get; private set; } = 1;
         public static float DamageFactor { get; private set; }
-        public static int Points { get; set; }
+
+        private static int _points = 0;
+
+        public static int Points
+        {
+            get => _points;
+            set
+            {
+                UIManager.UpdatePoints(value);
+                _points = value;
+            }
+        }
+
         public static float PointGainFactor { get; private set; }
 
         private static StatsManager _instance;
@@ -39,7 +52,7 @@ namespace _Scripts.Player
             PointGain
         }
 
-        private static IEnumerator ApplyEffect(List<float> effectList, float factor, float duration)
+        private static IEnumerator ApplyEffect(ICollection<float> effectList, float factor, float duration)
         {
             effectList.Add(factor);
             UpdateStats();
@@ -77,6 +90,12 @@ namespace _Scripts.Player
             HealthRegenFactor = _healthRegenEffects.Aggregate(1, (float result, float factor) => result * factor);
 
             _instance.speedEffects = _speedEffects;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.K))
+                Points += 1000;
         }
     }
 }

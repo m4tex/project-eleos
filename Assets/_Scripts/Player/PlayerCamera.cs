@@ -1,9 +1,12 @@
+using _Scripts.UI;
 using UnityEngine;
 
 namespace _Scripts.Player
 {
     public class PlayerCamera : MonoBehaviour
     {
+        public static PlayerCamera main;
+        
         public Transform snapPoint;
         public float mouseSensitivity = 1f;
     
@@ -13,15 +16,18 @@ namespace _Scripts.Player
         // public bool cameraLock;
         // private bool _cursorLocked;
 
-        private void Start()
+        private void Awake()
         {
+            main = this;
             Cursor.lockState = CursorLockMode.Locked;
             // _body = GetComponentInParent<PlayerMovement>().transform;
         } 
 
         private void Update()
         {
-            transform.position = snapPoint.position;
+            if (UIManager.ControllsLock) return;
+
+                transform.position = snapPoint.position;
             
             _yRotation += Input.GetAxis("Mouse X") * mouseSensitivity;
             _xRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;

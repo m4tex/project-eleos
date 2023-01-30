@@ -1,25 +1,21 @@
 using System;
 using UnityEngine;
 
-public enum LoadoutItem
-{
-    Firearm, Grenade, Special
-}
-
-//Responsible for tracking the current loadout setup and weapon switching
 namespace _Scripts.Weapons
 {
+    public enum LoadoutItem
+    {
+        Firearm, Grenade, Special
+    }
+
+//Responsible for tracking the current loadout setup and weapon switching
     public class LoadoutManager : MonoBehaviour
     {
-        public static LoadoutManager Instance;
+        public static LoadoutManager instance;
         
         private int _currentWeaponIndex = 0;
         private int _lastWeaponIndex = 0;
 
-        public Firearm primary;
-        //Doesn't necessarily mean a pistol
-        public Firearm secondary;
-        
         //public Grenade fragGrenades;
         //public Grenade stunGrenades;
         //public Grenade specialGrenades; IDK
@@ -36,29 +32,19 @@ namespace _Scripts.Weapons
         // Start is called before the first frame update
         private void Start()
         {
-            Instance = this;
+            instance = this;
             
             _loadout = new Component[2]; //Add grenades.length
-            primary = GetComponentInChildren<Firearm>();
-            _loadout[0] = primary;
+            _loadout[0] = GetComponentInChildren<Firearm>();
         }
 
-        private void UpdateLoadout()
-        {
-            _loadout[0] = primary;
-            _loadout[1] = secondary;
-            //Grenades
-        }
-        
         private void Update()
         {
             Inputs();
             
             //Counters
             if (_weaponSwitchCounter > 0)
-            {
                 _weaponSwitchCounter -= Time.deltaTime;
-            }
         }
 
         private void ToggleItem(int index)
@@ -82,11 +68,15 @@ namespace _Scripts.Weapons
             switch (item)
             {
                 case LoadoutItem.Firearm:
-                    var weaponComponent = weapon.GetComponent<Firearm>();
-                    if (secondary != null && (_currentWeaponIndex == 0 || (_currentWeaponIndex != 1 && _lastWeaponIndex == 0)))
-                        primary = weaponComponent;
+                    if (_loadout[1] != null &&
+                        (_currentWeaponIndex == 0 || (_currentWeaponIndex != 1 && _lastWeaponIndex == 0)))
+                    {
+                        SetWeapon(weapon, 0);
+                    }
                     else
-                        secondary = weaponComponent;
+                        SetWeapon(weapon, 1);
+                    
+                    ToggleItem(1);
                     break;
                 case LoadoutItem.Grenade:
                     
@@ -96,8 +86,13 @@ namespace _Scripts.Weapons
                 default:
                     throw new ArgumentOutOfRangeException(nameof(item), item, null);
             }
-            
-            UpdateLoadout();
+        }
+
+        private void SetWeapon(GameObject weaponObject, int index)
+        {
+            Destroy(_loadout[index].gameObject);
+            GameObject weapon = Instantiate(weaponObject, transform);
+            _loadout[index] = weapon.GetComponent<Firearm>();
         }
         
         private void Inputs()
@@ -117,6 +112,11 @@ namespace _Scripts.Weapons
             {
                 //Cycle through grenades
             }
+        }
+
+        public static Firearm GetCurrentWeapon()
+        {
+            return instance._loadout[instance._currentWeaponIndex].GetComponent<Firearm>();
         }
     }
 }

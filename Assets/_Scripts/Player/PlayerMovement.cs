@@ -20,8 +20,9 @@ namespace _Scripts.Player
         
         [Header("Sprinting")]
         public float sprintMultiplier = 1.5f;
-        private bool _isRunning = false;
-    
+
+        public bool IsRunning { get; private set; }
+
         public float maxStamina = 5f, fatigueDelay = 3f;
         private float _fatigueDelayCounter, _currentStamina;
 
@@ -56,11 +57,12 @@ namespace _Scripts.Player
         private float _jumpDelayCounter;
         private Vector3 _move;
         
+        private void Awake() => Main = this;
+        
         private void Start()
         {
             if (Camera.main == null) throw new Exception("Main Camera doesn't exist!!!");
             
-            Main = this;
             _playerCamera = Camera.main.transform;
             _rb = GetComponent<Rigidbody>();
             _initialSnapPointPos = cameraSnapPoint.localPosition;
@@ -98,7 +100,7 @@ namespace _Scripts.Player
 
             _move.Normalize();
             
-            _move += _isRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
+            _move += IsRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
             
             _rb.velocity = Vector3.MoveTowards( _rb.velocity, _move * (walkSpeed * StatsManager.SpeedFactor), 
@@ -106,17 +108,17 @@ namespace _Scripts.Player
 
             #region Sprinting
 
-            if (Input.GetKey(KeyCode.LeftShift) && z > 0 && _fatigueDelayCounter <= 0 && !_isRunning)
+            if (Input.GetKey(KeyCode.LeftShift) && z > 0 && _fatigueDelayCounter <= 0 && !IsRunning)
             {
-                _isRunning = true;
+                IsRunning = true;
             }
-            else switch (_isRunning)
+            else switch (IsRunning)
             {
                 case true when z == 0:
-                    _isRunning = false;
+                    IsRunning = false;
                     break;
                 case true when _currentStamina <= 0:
-                    _isRunning = false;
+                    IsRunning = false;
                     _fatigueDelayCounter = fatigueDelay;
                     break;
             }
@@ -126,7 +128,7 @@ namespace _Scripts.Player
 
         private void SnapPointBobbing(float inputX, float inputZ, bool isGrounded)
         {
-            var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (_isRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
+            var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (IsRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
             
             cameraSnapPoint.localPosition = Vector3.Lerp(cameraSnapPoint.localPosition,
                 _initialSnapPointPos + new Vector3(0, yOffset, 0), Time.deltaTime * smoothBobbing);
@@ -137,7 +139,7 @@ namespace _Scripts.Player
 
         private void DynamicFOV()
         {
-            var targetFOV = _isRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;
+            var targetFOV = IsRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;
             
             _playerCameraComponent.fieldOfView = Mathf.Lerp(_playerCameraComponent.fieldOfView, targetFOV,
                 fovTransitionSmooth * Time.deltaTime);
@@ -145,9 +147,9 @@ namespace _Scripts.Player
         
         private void Counters()
         {
-            if (_isRunning)
+            if (IsRunning)
                 _currentStamina -= Time.deltaTime;
-            if (_currentStamina < maxStamina && !_isRunning)
+            if (_currentStamina < maxStamina && !IsRunning)
                 _currentStamina += Time.deltaTime / 2;
             if (_fatigueDelayCounter > 0)
                 _fatigueDelayCounter -= Time.deltaTime;

@@ -22,6 +22,12 @@ namespace _Scripts.Player
         private bool _promptShown;
         void Update()
         {
+            if (UIManager.ControllsLock)
+            {
+                UIManager.ClearInteractionPrompt();
+                return;
+            }
+
             Physics.Raycast(_playerCamera.position, _playerCamera.forward, out var hit, range);
         
             //Shows text when hovering and executes the interaction function when pressing a certain key

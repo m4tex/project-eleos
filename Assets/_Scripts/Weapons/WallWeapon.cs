@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Interfaces;
+using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,11 +12,17 @@ namespace _Scripts.Weapons
         public string IntPrompt { get; set; }
 
         //The fully scripted weapon object with disabled components
-        public GameObject weapon;
+        private Firearm _weapon;
 
         private void Start()
         {
-            IntPrompt = $"Buy {weapon.GetComponent<Firearm>().weaponName} for $";
+            _weapon = GetComponentInChildren<Firearm>();
+            IntPrompt = $"Buy {_weapon.weaponName} for ${_weapon.wallPrice}";
+            Interaction.AddListener(() =>
+            {
+                LoadoutManager.instance.NewWeapon(_weapon.gameObject, LoadoutItem.Firearm);
+                StatsManager.Points -= _weapon.wallPrice;
+            });
         }
     }
 }
