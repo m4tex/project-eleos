@@ -40,7 +40,7 @@ namespace _Scripts.Player
         [Space] 
         
         [Header("Dynamic FOV")] 
-        public float walkingFOV = 65;
+        public float walkingFovAmount = 65;
         public float runningFOV = 75;
         public float fovTransitionSmooth = 10f;
         

@@ -2645,6 +2645,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 683058605813167376, guid: f4c8e7651627a17c7880b1e39c72953c,
         type: 3}
+      propertyPath: aimingHeight
+      value: -0.105
+      objectReference: {fileID: 0}
+    - target: {fileID: 683058605813167376, guid: f4c8e7651627a17c7880b1e39c72953c,
+        type: 3}
       propertyPath: maxReserveAmmo
       value: 72
       objectReference: {fileID: 0}
@@ -2657,6 +2662,11 @@ PrefabInstance:
         type: 3}
       propertyPath: magazineCapacity
       value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 683058605813167376, guid: f4c8e7651627a17c7880b1e39c72953c,
+        type: 3}
+      propertyPath: aimingDistanceOffset
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 683058605813167377, guid: f4c8e7651627a17c7880b1e39c72953c,
         type: 3}
@@ -2748,7 +2758,13 @@ PrefabInstance:
       propertyPath: tiltSmooth
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 683058605813167598, guid: f4c8e7651627a17c7880b1e39c72953c,
+        type: 3}
+      propertyPath: aimTiltAmount
+      value: 1.5
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 683058605813167599, guid: f4c8e7651627a17c7880b1e39c72953c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f4c8e7651627a17c7880b1e39c72953c, type: 3}
 --- !u!1 &810308676
 GameObject:
@@ -4798,7 +4814,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532666678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

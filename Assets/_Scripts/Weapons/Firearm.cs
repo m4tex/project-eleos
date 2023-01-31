@@ -19,11 +19,10 @@ namespace _Scripts.Weapons
 
     [RequireComponent(typeof(AudioSource))]
     [RequireComponent(typeof(WeaponSway))]
-    [RequireComponent(typeof(Animator))]
     public class Firearm : MonoBehaviour
     {
-        [Header("General")] public int baseDamage = 20;
-
+        [Header("General")] 
+        public int baseDamage = 20;
         public int range = 200;
         public float fireRate = 0.2f;
         public bool isFullAuto = true;
@@ -32,46 +31,50 @@ namespace _Scripts.Weapons
         public AmmoType ammoType = AmmoType.Pistol;
         public float reloadDuration = 3.2f;
         public float accuracy = 0.85f;
-
         public float spread = 2f;
         //public List<Attachment> attachments = new();
 
         //Counters
         private float _fireRateCounter;
+        [HideInInspector]
         public int currentMagazine, currentReserveAmmo;
 
-        [Header("Modifiers")] public const float HeadShotMultiplier = 1.65f, BodyShotMultiplier = 1f, LegShotMultiplier = 0.75f;
+        [Header("Modifiers")] 
+        public const float HeadShotMultiplier = 1.65f, BodyShotMultiplier = 1f, LegShotMultiplier = 0.75f;
 
         [Header("Wall Weapon Properties")]
         // public bool isWallWeapon = false;
         public int wallPrice = 1200;
-
         public string weaponName = "Weapon Name";
 
-        [Header("Aiming")] public float scopingSpeed = 0.6f;
+        [Header("Aiming")] 
+        public float aimingSpeed = 0.6f;
+        public int aimingZoomAmount = 8;
+        public float aimingDistanceOffset;
+        public float aimingHeight;
 
-        [Header("Animation")] public float pushback = 0.15f;
-        private Animator _animator;
+        [FormerlySerializedAs("pushback")] [Header("Animation")] 
+        public float recoilPushback = 0.15f;
+        public float recoilTorque = 6f;
 
-        // public AnimationClip shootingAnimation;
-        public AnimationClip reloadingAnimation;
-
-        [Header("SFX")] public List<AudioClip> soundClips;
-
+        [Header("SFX")] 
+        public List<AudioClip> soundClips;
         private AudioSource _audioSource;
 
         private bool _isReloading;
+        private bool _isAiming;
         private TMP_Text _ammoIndicator;
-        private Transform _cameraTransform;
+        private Camera _camera;
         private WeaponSway _weaponSway;
         
         // Start is called before the first frame update
         private void Start()
         {
-            _cameraTransform = PlayerCamera.main.transform;
+            _camera = PlayerCamera.main.GetComponent<Camera>();
             _audioSource = GetComponent<AudioSource>();
-            _animator = GetComponent<Animator>();
             _weaponSway = GetComponent<WeaponSway>();
+            _weaponSway.aimSwayPos = new Vector3(0, aimingHeight, aimingDistanceOffset);
+            
             currentMagazine = magazineCapacity;
             currentReserveAmmo = maxReserveAmmo;
 
@@ -86,20 +89,46 @@ namespace _Scripts.Weapons
             if (input && currentMagazine != 0 && _fireRateCounter <= 0 && !PlayerMovement.Main.IsRunning)
                 Shoot();
 
-            if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
+            if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
+                && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
             {
                 StartCoroutine(ReloadCoroutine());
             }
-            
+
+            if (Input.GetMouseButtonDown(1) && !_isReloading)
+            {
+                StartAiming();
+            }
+
+            if (Input.GetMouseButtonUp(1) || (PlayerMovement.Main.IsRunning && _isAiming))
+            {
+                StopAiming();
+            }
+
             Counters();
         }
 
+        private void StartAiming()
+        {
+            _isAiming = true;
+            _weaponSway.isAiming = true;
+            PlayerCamera.main.ChangeZoom(aimingZoomAmount, aimingSpeed);
+        }
+
+        private void StopAiming()
+        {
+            _isAiming = false;
+            _weaponSway.isAiming = false;
+            PlayerCamera.main.ChangeZoom(-aimingZoomAmount, aimingSpeed);
+        }
+        
         private void Shoot()
         {
             var weaponTransform = transform;
-            weaponTransform.localPosition -= new Vector3(0, 0, pushback);
+            weaponTransform.localPosition -= new Vector3(0, 0, recoilPushback);
+            weaponTransform.localEulerAngles -= new Vector3(recoilTorque, 0, 0);
 
-            if (Physics.Raycast(_cameraTransform.position, _cameraTransform.forward, out var hit, range))
+            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, range))
             {
                 if (hit.transform.TryGetComponent<Zombie>(out var zombie))
                 {
