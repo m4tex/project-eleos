@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Enemies;
@@ -119,8 +120,20 @@ namespace _Scripts.Weapons
             _isReloading = true;
             _weaponSway.enabled = false;
 
-            transform.localPosition -= new Vector3(0, .5f, 0);
+            float elapsed = 0;
+            float length = reloadDuration / 6;
+            Vector3 initialPosition = transform.localPosition;
+            Vector3 targetPosition = initialPosition - new Vector3(0, 0.5f, 0);
 
+            while (elapsed < length)
+            {
+                var easedInDelta = Mathf.Pow(elapsed / length, 4);
+                elapsed += Time.deltaTime;
+
+                transform.localPosition = Vector3.Lerp(initialPosition, targetPosition, easedInDelta);
+                yield return null;
+            }
+            
             yield return new WaitForSeconds(reloadDuration);
 
             if (currentReserveAmmo >= magazineCapacity - currentMagazine)
