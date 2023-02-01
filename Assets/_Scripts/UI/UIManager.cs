@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using _Scripts.Player;
+using _Scripts.Weapons;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace _Scripts.UI
 {
@@ -14,7 +17,15 @@ namespace _Scripts.UI
         private TMP_Text _promptText;
 
         [Header("Weapon Shop")] public GameObject weaponShopUI;
-        public GameObject insufficientFundsPrompt;
+        public Button refillAmmoButton;
+        public List<Button> weaponButtons = new();
+
+        //UI Shop will be temporary and thus this table, while not very well implemented, does the job.
+        private static readonly int[] WeaponPriceLookupTable = 
+        {
+            500, 1050, 1450, 1700, 2400, 3600, 5200
+        };
+
         private static bool _controllsLock;
 
         public static bool ControllsLock
@@ -63,6 +74,8 @@ namespace _Scripts.UI
 
             ControllsLock = true;
             _ins.weaponShopUI.gameObject.SetActive(true);
+
+            UpdateShop();
         }
 
         private static void CloseWeaponShop()
@@ -71,14 +84,32 @@ namespace _Scripts.UI
 
             ControllsLock = false;
             _ins.weaponShopUI.SetActive(false);
-            _ins.insufficientFundsPrompt.SetActive(false);
         }
-        
-        public static void ShowWeaponShopInsufficientFundsPrompt() //We like em long descriptive names xd
+
+        public static void UpdateShop()
         {
-            _ins.insufficientFundsPrompt.SetActive(true);
+            for (var i = 0; i < WeaponPriceLookupTable.Length; i++)
+            {
+                _ins.weaponButtons[i].interactable = StatsManager.Points >= WeaponPriceLookupTable[i];
+            }
+            
+            //TODO add ammo prices to the button text
+
+            _ins.refillAmmoButton.GetComponentInChildren<TMP_Text>().text = $"Refill ammo ${123132}";
         }
         
+        // public static void ShowWeaponShopInsufficientFundsPrompt() //We like em long descriptive names xd
+        // {
+        //     _ins.StartCoroutine(SetActiveForSeconds(_ins.insufficientFundsPrompt, 1.2f));
+        // }
+        //
+        // private static IEnumerator SetActiveForSeconds(GameObject element, float seconds)
+        // {
+        //     element.SetActive(true);
+        //     yield return new WaitForSeconds(seconds);
+        //     element.SetActive(false);
+        // }
+        //
         private void Update()
         {
             if (ControllsLock && Input.GetKeyDown(KeyCode.Escape))

@@ -33,6 +33,7 @@ namespace _Scripts.Weapons
         public float reloadDuration = 3.2f;
         public float accuracy = 0.85f;
         public float spread = 2f;
+        public float impactForce = 200;
         //public List<Attachment> attachments = new();
 
         //Counters
@@ -49,7 +50,7 @@ namespace _Scripts.Weapons
         public string weaponName = "Weapon Name";
 
         [Header("Aiming")] 
-        public float aimingSpeed = 0.6f;
+        // public float aimingSpeed = 0.6f;
         public int aimingZoomAmount = 8;
         public float aimingDistanceOffset;
         public float aimingHeight;
@@ -80,7 +81,7 @@ namespace _Scripts.Weapons
             currentReserveAmmo = maxReserveAmmo;
 
             _ammoIndicator = GetComponentInChildren<TMP_Text>();
-            _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
+            UpdateAmmo();
         }
 
         private void OnEnable()
@@ -142,13 +143,16 @@ namespace _Scripts.Weapons
                 if (hit.transform.TryGetComponent<Zombie>(out var zombie))
                 {
                     zombie.TakeDamage(baseDamage, hit.point.y);
+                } else if (hit.transform.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    rb.AddForce(_camera.transform.forward * impactForce);
                 }
             }
 
             //TODO bullet holes
 
             currentMagazine--;
-            _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
+            UpdateAmmo();
             
             _fireRateCounter = fireRate;
         }
@@ -161,7 +165,7 @@ namespace _Scripts.Weapons
             float elapsed = 0;
             float length = reloadDuration / 6;
             Vector3 initialPosition = transform.localPosition;
-            Vector3 targetPosition = initialPosition - new Vector3(0, 0.5f, 0);
+            Vector3 targetPosition = initialPosition - new Vector3(0, 1.5f, 0);
 
             while (elapsed < length)
             {
@@ -185,7 +189,7 @@ namespace _Scripts.Weapons
                 currentReserveAmmo = 0;
             }
 
-            _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
+            UpdateAmmo();
             _isReloading = false;
             _weaponSway.enabled = true;
         }
@@ -194,6 +198,11 @@ namespace _Scripts.Weapons
         {
             if (_fireRateCounter > 0)
                 _fireRateCounter -= Time.deltaTime;
+        }
+
+        public void UpdateAmmo()
+        {
+            _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
         }
     }
 }

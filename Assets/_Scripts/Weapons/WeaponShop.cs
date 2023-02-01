@@ -28,35 +28,38 @@ namespace _Scripts.Weapons
         {
             var weaponComponent = weapon.GetComponent<Firearm>();
 
-            if (StatsManager.Points >= weaponComponent.wallPrice)
-            {
-                StatsManager.Points -= weaponComponent.wallPrice;
-                LoadoutManager.instance.NewWeapon(weapon, LoadoutItem.Firearm);
-            }
-            else
-            {
-                UIManager.ShowWeaponShopInsufficientFundsPrompt();
-            }
+            if (StatsManager.Points < weaponComponent.wallPrice) return;
+            
+            StatsManager.Points -= weaponComponent.wallPrice;
+            LoadoutManager.instance.NewWeapon(weapon, LoadoutItem.Firearm);
+            
+            UIManager.UpdateShop();
         }
 
         public void BuyAmmo()
         {
             var weapon = LoadoutManager.GetCurrentWeapon();
             var ammoPrice = GetAmmoPrice(weapon.ammoType);
+            
             var missingAmmo = weapon.magazineCapacity + weapon.maxReserveAmmo - weapon.currentMagazine -
                               weapon.currentReserveAmmo;
 
-            var ammoToBuy = (int)(StatsManager.Points / (missingAmmo * ammoPrice));
+            var maxAmount = StatsManager.Points / ammoPrice;
 
-            if (ammoToBuy != 0)
+            if (maxAmount >= missingAmmo)
             {
-                StatsManager.Points -= (ammoPrice * ammoToBuy);
-                weapon.currentReserveAmmo += ammoToBuy;
+                StatsManager.Points -= missingAmmo * ammoPrice;
+                weapon.currentReserveAmmo += missingAmmo;
+                weapon.UpdateAmmo();
             }
-            else
+            else if (maxAmount > 0)
             {
-                UIManager.ShowWeaponShopInsufficientFundsPrompt();
+                StatsManager.Points -= maxAmount * ammoPrice;
+                weapon.currentReserveAmmo += maxAmount;
+                weapon.UpdateAmmo();
             }
+            
+            UIManager.UpdateShop();
         }
 
         private int GetAmmoPrice(AmmoType type)

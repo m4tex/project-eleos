@@ -201,6 +201,9 @@ MonoBehaviour:
   maxTilt: 0
   tiltAmount: 0
   tiltSmooth: 0
+  aimTiltAmount: 1.5
+  isAiming: 0
+  aimSwayPos: {x: 0, y: 0, z: 0}
 --- !u!95 &7162371110410449883
 Animator:
   serializedVersion: 4
@@ -234,18 +237,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 20
+  range: 200
   fireRate: 0.2
   isFullAuto: 1
   magazineCapacity: 30
+  maxReserveAmmo: 120
+  ammoType: 0
   reloadDuration: 3.2
   accuracy: 0.85
   spread: 2
-  headShotMultiplier: 1.65
-  bodyShotMultiplier: 1
-  legShotMultiplier: 0.75
-  wallPrice: 1200
+  impactForce: 200
+  currentMagazine: 0
+  currentReserveAmmo: 0
+  wallPrice: 1700
   weaponName: Weapon Name
-  scopingSpeed: 0.6
-  shootingAnimation: {fileID: 0}
-  reloadingAnimation: {fileID: 0}
+  aimingZoomAmount: 8
+  aimingDistanceOffset: 0
+  aimingHeight: 0
+  recoilPushback: 0.15
+  recoilTorque: 6
   soundClips: []

@@ -9,22 +9,23 @@ namespace _Scripts.Weapons
     public class WeaponSway : MonoBehaviour
     {
         [Header("Positional Sway")] 
-        public float maxSway = 10;
-        public float swayAmount = 4, swaySmooth = 0.5f;
+        public float maxSway = 0.08f;
+        public float swayAmount = 0.2f, swaySmooth = 8;
     
         [Header("Rotational Sway")] 
-        public float maxTilt;
-        public float tiltAmount, tiltSmooth;
+        public float maxTilt = 10;
+        public float tiltAmount = 3, tiltSmooth = 10;
         // public bool tiltX, tiltY, tiltZ;
 
         [Header("Aiming")] 
-        [HideInInspector]
-        public bool isAiming = false;
-        public float aimTiltAmount;
-        [HideInInspector]
-        public Vector3 aimSwayPos;
-        private Vector3 _aimSwayRot = Vector3.zero;
+        public float aimTiltAmount = 1.5f;
         
+        // [HideInInspector]
+        public bool isAiming = false;
+        // [HideInInspector]
+        public Vector3 aimSwayPos;
+        
+        private Vector3 _aimSwayRot = Vector3.zero;
         private Vector3 _initialPos, _initialRot;
         private float mouseX, mouseY;
         

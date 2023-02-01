@@ -74,9 +74,11 @@ namespace _Scripts.Weapons
                         SetWeapon(weapon, 0);
                     }
                     else
+                    {
                         SetWeapon(weapon, 1);
+                        ToggleItem(1);
+                    }
                     
-                    ToggleItem(1);
                     break;
                 case LoadoutItem.Grenade:
                     
@@ -90,7 +92,9 @@ namespace _Scripts.Weapons
 
         private void SetWeapon(GameObject weaponObject, int index)
         {
-            Destroy(_loadout[index].gameObject);
+            if (_loadout[index] != null)
+                Destroy(_loadout[index].gameObject);
+
             GameObject weapon = Instantiate(weaponObject, transform);
             _loadout[index] = weapon.GetComponent<Firearm>();
         }
