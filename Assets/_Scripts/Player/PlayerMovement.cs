@@ -20,8 +20,8 @@ namespace _Scripts.Player
         
         [Header("Sprinting")]
         public float sprintMultiplier = 1.5f;
-
-        public bool IsRunning { get; private set; }
+        
+        public bool isRunning { get; private set; }
 
         public float maxStamina = 5f, fatigueDelay = 3f;
         private float _fatigueDelayCounter, _currentStamina;
@@ -74,7 +74,7 @@ namespace _Scripts.Player
         {
             WalkingAndSprint();
             Counters();
-            DynamicFOV();
+            // DynamicFOV();
         }
 
         private void WalkingAndSprint()
@@ -100,7 +100,7 @@ namespace _Scripts.Player
 
             _move.Normalize();
             
-            _move += IsRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
+            _move += isRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
             
             _rb.velocity = Vector3.MoveTowards( _rb.velocity, _move * (walkSpeed * StatsManager.SpeedFactor), 
@@ -108,17 +108,17 @@ namespace _Scripts.Player
 
             #region Sprinting
 
-            if (Input.GetKey(KeyCode.LeftShift) && z > 0 && _fatigueDelayCounter <= 0 && !IsRunning)
+            if (Input.GetKey(KeyCode.LeftShift) && z > 0 && _fatigueDelayCounter <= 0 && !isRunning)
             {
-                IsRunning = true;
+                isRunning = true;
             }
-            else switch (IsRunning)
+            else switch (isRunning)
             {
                 case true when z == 0:
-                    IsRunning = false;
+                    isRunning = false;
                     break;
                 case true when _currentStamina <= 0:
-                    IsRunning = false;
+                    isRunning = false;
                     _fatigueDelayCounter = fatigueDelay;
                     break;
             }
@@ -128,7 +128,7 @@ namespace _Scripts.Player
 
         private void SnapPointBobbing(float inputX, float inputZ, bool isGrounded)
         {
-            var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (IsRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
+            var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (isRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
             
             cameraSnapPoint.localPosition = Vector3.Lerp(cameraSnapPoint.localPosition,
                 _initialSnapPointPos + new Vector3(0, yOffset, 0), Time.deltaTime * smoothBobbing);
@@ -137,19 +137,19 @@ namespace _Scripts.Player
             else _bobbingElapsed += Time.time;
         }
 
-        private void DynamicFOV()
-        {
-            var targetFOV = IsRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;
-            
-            _playerCameraComponent.fieldOfView = Mathf.Lerp(_playerCameraComponent.fieldOfView, targetFOV,
-                fovTransitionSmooth * Time.deltaTime);
-        }
+        // private void DynamicFOV()
+        // {
+        //     var targetFOV = isRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;
+        //     
+        //     _playerCameraComponent.fieldOfView = Mathf.Lerp(_playerCameraComponent.fieldOfView, targetFOV,
+        //         fovTransitionSmooth * Time.deltaTime);
+        // }
         
         private void Counters()
         {
-            if (IsRunning)
+            if (isRunning)
                 _currentStamina -= Time.deltaTime;
-            if (_currentStamina < maxStamina && !IsRunning)
+            if (_currentStamina < maxStamina && !isRunning)
                 _currentStamina += Time.deltaTime / 2;
             if (_fatigueDelayCounter > 0)
                 _fatigueDelayCounter -= Time.deltaTime;

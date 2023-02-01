@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2660,6 +2660,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 683058605813167376, guid: f4c8e7651627a17c7880b1e39c72953c,
         type: 3}
+      propertyPath: aimingZoomAmount
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 683058605813167376, guid: f4c8e7651627a17c7880b1e39c72953c,
+        type: 3}
       propertyPath: magazineCapacity
       value: 18
       objectReference: {fileID: 0}
@@ -2726,6 +2731,11 @@ PrefabInstance:
     - target: {fileID: 683058605813167594, guid: f4c8e7651627a17c7880b1e39c72953c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 683058605813167597, guid: f4c8e7651627a17c7880b1e39c72953c,
+        type: 3}
+      propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 683058605813167598, guid: f4c8e7651627a17c7880b1e39c72953c,
@@ -3338,7 +3348,7 @@ MonoBehaviour:
   smoothBobbing: 3
   sprintBobbingFrequencyFactor: 1.5
   cameraSnapPoint: {fileID: 1335492035}
-  walkingFOV: 61
+  walkingFovAmount: 65
   runningFOV: 70
   fovTransitionSmooth: 5
   groundScanRange: 0.2
@@ -4551,12 +4561,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 1515424007}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 1515424007}
+  m_maskType: 0
 --- !u!23 &1515424007
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4871,6 +4881,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snapPoint: {fileID: 1335492035}
   mouseSensitivity: 1
+  walkingFovAmount: 1
+  sprintingFovAmount: 4
+  fovTransitionSmooth: 4
+  weaponZoom: 0
+  weaponZoomFovAmount: 0
 --- !u!114 &1532666684
 MonoBehaviour:
   m_ObjectHideFlags: 0

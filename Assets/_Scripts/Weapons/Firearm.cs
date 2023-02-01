@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Enemies;
 using _Scripts.Player;
+using _Scripts.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -70,7 +71,7 @@ namespace _Scripts.Weapons
         // Start is called before the first frame update
         private void Start()
         {
-            _camera = PlayerCamera.main.GetComponent<Camera>();
+            _camera = PlayerCamera.Main.GetComponent<Camera>();
             _audioSource = GetComponent<AudioSource>();
             _weaponSway = GetComponent<WeaponSway>();
             _weaponSway.aimSwayPos = new Vector3(0, aimingHeight, aimingDistanceOffset);
@@ -81,12 +82,20 @@ namespace _Scripts.Weapons
             _ammoIndicator = GetComponentInChildren<TMP_Text>();
             _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
         }
+
+        private void OnEnable()
+        {
+            PlayerCamera.Main.weaponZoomFovAmount = aimingZoomAmount;
+        }
         
+
         private void Update()
         {
+            if (UIManager.ControllsLock) return;
+
             var input = isFullAuto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0);
 
-            if (input && currentMagazine != 0 && _fireRateCounter <= 0 && !PlayerMovement.Main.IsRunning)
+            if (input && currentMagazine != 0 && _fireRateCounter <= 0 && !PlayerMovement.Main.isRunning)
                 Shoot();
 
             if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
@@ -100,7 +109,7 @@ namespace _Scripts.Weapons
                 StartAiming();
             }
 
-            if (Input.GetMouseButtonUp(1) || (PlayerMovement.Main.IsRunning && _isAiming))
+            if (Input.GetMouseButtonUp(1) || (PlayerMovement.Main.isRunning && _isAiming))
             {
                 StopAiming();
             }
@@ -112,14 +121,14 @@ namespace _Scripts.Weapons
         {
             _isAiming = true;
             _weaponSway.isAiming = true;
-            PlayerCamera.main.ChangeZoom(aimingZoomAmount, aimingSpeed);
+            PlayerCamera.Main.weaponZoom = true;
         }
 
         private void StopAiming()
         {
             _isAiming = false;
             _weaponSway.isAiming = false;
-            PlayerCamera.main.ChangeZoom(-aimingZoomAmount, aimingSpeed);
+            PlayerCamera.Main.weaponZoom = false;
         }
         
         private void Shoot()
