@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.UI;
+using _Scripts.Weapons;
 using UnityEngine;
 
 namespace _Scripts.Player

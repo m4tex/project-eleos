@@ -17,7 +17,7 @@ namespace _Scripts.UI
         private TMP_Text _promptText;
 
         [Header("Weapon Shop")] public GameObject weaponShopUI;
-        public Button refillAmmoButton;
+        // public Button refillAmmoButton;
         public List<Button> weaponButtons = new();
 
         //UI Shop will be temporary and thus this table, while not very well implemented, does the job.
@@ -93,9 +93,9 @@ namespace _Scripts.UI
                 _ins.weaponButtons[i].interactable = StatsManager.Points >= WeaponPriceLookupTable[i];
             }
             
-            //TODO add ammo prices to the button text
-
-            _ins.refillAmmoButton.GetComponentInChildren<TMP_Text>().text = $"Refill ammo ${123132}";
+            // //TODO add ammo prices to the button text
+            //
+            // _ins.refillAmmoButton.GetComponentInChildren<TMP_Text>().text = $"Refill ammo ${123132}";
         }
         
         // public static void ShowWeaponShopInsufficientFundsPrompt() //We like em long descriptive names xd
@@ -109,7 +109,7 @@ namespace _Scripts.UI
         //     yield return new WaitForSeconds(seconds);
         //     element.SetActive(false);
         // }
-        //
+
         private void Update()
         {
             if (ControllsLock && Input.GetKeyDown(KeyCode.Escape))

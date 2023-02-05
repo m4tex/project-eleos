@@ -36,42 +36,42 @@ namespace _Scripts.Weapons
             UIManager.UpdateShop();
         }
 
-        public void BuyAmmo()
-        {
-            var weapon = LoadoutManager.GetCurrentWeapon();
-            var ammoPrice = GetAmmoPrice(weapon.ammoType);
-            
-            var missingAmmo = weapon.magazineCapacity + weapon.maxReserveAmmo - weapon.currentMagazine -
-                              weapon.currentReserveAmmo;
+        // public void BuyAmmo()
+        // {
+        //     var weapon = LoadoutManager.GetCurrentWeapon();
+        //     var ammoPrice = GetAmmoPrice(weapon.ammoType);
+        //     
+        //     var missingAmmo = weapon.magazineCapacity + weapon.maxReserveAmmo - weapon.currentMagazine -
+        //                       weapon.currentReserveAmmo;
+        //
+        //     var maxAmount = StatsManager.Points / ammoPrice;
+        //
+        //     if (maxAmount >= missingAmmo)
+        //     {
+        //         StatsManager.Points -= missingAmmo * ammoPrice;
+        //         weapon.currentReserveAmmo += missingAmmo;
+        //         weapon.UpdateAmmo();
+        //     }
+        //     else if (maxAmount > 0)
+        //     {
+        //         StatsManager.Points -= maxAmount * ammoPrice;
+        //         weapon.currentReserveAmmo += maxAmount;
+        //         weapon.UpdateAmmo();
+        //     }
+        //     
+        //     UIManager.UpdateShop();
+        // }
 
-            var maxAmount = StatsManager.Points / ammoPrice;
-
-            if (maxAmount >= missingAmmo)
-            {
-                StatsManager.Points -= missingAmmo * ammoPrice;
-                weapon.currentReserveAmmo += missingAmmo;
-                weapon.UpdateAmmo();
-            }
-            else if (maxAmount > 0)
-            {
-                StatsManager.Points -= maxAmount * ammoPrice;
-                weapon.currentReserveAmmo += maxAmount;
-                weapon.UpdateAmmo();
-            }
-            
-            UIManager.UpdateShop();
-        }
-
-        private int GetAmmoPrice(AmmoType type)
-        {
-            return type switch
-            {
-                AmmoType.Pistol => handgunAmmoPrice,
-                AmmoType.Rifle => rifleAmmoPrice,
-                AmmoType.Shotgun => shotgunAmmoPrice,
-                AmmoType.Smg => smgAmmoPrice,
-                _ => -1
-            };
-        }
+        // private int GetAmmoPrice(AmmoType type)
+        // {
+        //     return type switch
+        //     {
+        //         AmmoType.Pistol => handgunAmmoPrice,
+        //         AmmoType.Rifle => rifleAmmoPrice,
+        //         AmmoType.Shotgun => shotgunAmmoPrice,
+        //         AmmoType.Smg => smgAmmoPrice,
+        //         _ => -1
+        //     };
+        // }
     }
 }
