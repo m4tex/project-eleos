@@ -10,6 +10,7 @@ namespace _Scripts.Weapons
     {
         public UnityEvent Interaction { get; set; } = new();
         public string IntPrompt { get; set; }
+        public ConditionFunction Condition { get; set; }
 
         //The fully scripted weapon object with disabled components
         private Firearm _weapon;

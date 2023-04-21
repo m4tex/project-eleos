@@ -102,7 +102,7 @@ namespace _Scripts.Weapons
             if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
                 && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
             {
-                StartCoroutine(ReloadCoroutine());
+                Reload();
             }
 
             if (Input.GetMouseButtonDown(1) && !_isReloading)
@@ -203,6 +203,17 @@ namespace _Scripts.Weapons
         public void UpdateAmmo()
         {
             _ammoIndicator.text = $"{currentMagazine} / {currentReserveAmmo}";
+        }
+
+        public void SmallRefill(int magazineCount)
+        {
+            currentReserveAmmo += magazineCount * magazineCapacity;
+            UpdateAmmo();
+        }
+
+        public void Reload()
+        {
+            StartCoroutine(ReloadCoroutine());
         }
     }
 }

@@ -3,20 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.UI;
-using _Scripts.Weapons;
 using UnityEngine;
 
 namespace _Scripts.Player
 {
     public class StatsManager : MonoBehaviour
     {
-        public static int Health { get; set; } = 100;
-        //Could be negative to inflict damage over time
-        public static float HealthRegenFactor { get; private set; }
+        public static int Health
+        {
+            get => _health;
+            set
+            {
+                UIManager.UpdateHealth(value);
+                _health = value;
+            }
+        }
+
+        public static float HealthRegenFactor { get; private set; }  //Could be negative to inflict damage over time
         public static float SpeedFactor { get; private set; } = 1;
         public static float DamageFactor { get; private set; }
 
         private static int _points = 0;
+        private static int _health = 100;
 
         public static int Points
         {
@@ -28,7 +36,7 @@ namespace _Scripts.Player
             }
         }
 
-        public static float PointGainFactor { get; private set; }
+        public static float pointGainFactor { get; private set; }
 
         private static StatsManager _instance;
 
@@ -87,7 +95,7 @@ namespace _Scripts.Player
         {
             DamageFactor = _damageEffects.Aggregate(1, (float result, float factor) => result * factor);
             SpeedFactor = _speedEffects.Aggregate(1, (float result, float factor) => result * factor);
-            PointGainFactor = _pointGainEffects.Aggregate(1, (float result, float factor) => result * factor);
+            pointGainFactor = _pointGainEffects.Aggregate(1, (float result, float factor) => result * factor);
             HealthRegenFactor = _healthRegenEffects.Aggregate(1, (float result, float factor) => result * factor);
 
             _instance.speedEffects = _speedEffects;
@@ -97,6 +105,8 @@ namespace _Scripts.Player
         {
             if (Input.GetKeyDown(KeyCode.K))
                 Points += 1000;
+            if (Input.GetKeyDown(KeyCode.M))
+                Health -= 20;
         }
     }
 }

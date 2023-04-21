@@ -122,5 +122,28 @@ namespace _Scripts.Weapons
         {
             return instance._loadout[instance._currentWeaponIndex].GetComponent<Firearm>();
         }
+
+        public static void RefillAllWeapons()
+        {
+            foreach (Component weapon in instance._loadout)
+            {
+                if (weapon == null || weapon.GetType() != typeof(Firearm))
+                    continue;
+
+                Firearm component = (Firearm) weapon;
+
+
+                if (component.currentReserveAmmo <
+                    component.maxReserveAmmo + component.magazineCapacity - component.currentMagazine)
+                {
+                    component.currentReserveAmmo = component.maxReserveAmmo + component.magazineCapacity -
+                                                   component.currentReserveAmmo;
+                
+                    GetCurrentWeapon().Reload();
+                }
+                
+                component.UpdateAmmo();
+            }
+        }
     }
 }

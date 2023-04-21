@@ -12,6 +12,7 @@ namespace _Scripts.Weapons
     {
         public UnityEvent Interaction { get; set; } = new UnityEvent();
         public string IntPrompt { get; set; }
+        public ConditionFunction Condition { get; set; }
 
         public int handgunAmmoPrice = 5;
         public int smgAmmoPrice = 8;

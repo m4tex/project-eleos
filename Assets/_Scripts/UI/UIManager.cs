@@ -41,6 +41,7 @@ namespace _Scripts.UI
 
         [Header("Stats")] 
         public TMP_Text pointsIndicator;
+        public Image healthIndicator;
 
         private static UIManager _ins;
 
@@ -53,7 +54,12 @@ namespace _Scripts.UI
 
         public static void UpdatePoints(int points)
         {
-            _ins.pointsIndicator.text = $"Points: {points}";
+            _ins.pointsIndicator.text = $"Score: {points}";
+        }
+
+        public static void UpdateHealth(int health)
+        {
+            _ins.healthIndicator.fillAmount = health / 100f;
         }
 
         public static void SetInteractionPrompt(string prompt)

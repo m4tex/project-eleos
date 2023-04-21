@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Interfaces;
 using _Scripts.UI;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -35,7 +36,9 @@ namespace _Scripts.Player
             {
                 UIManager.SetInteractionPrompt(interactionKey + " to " + interactable.IntPrompt);
 
-                if (Input.GetKeyDown(interactionKey))
+                interactable.Condition ??= () => true;
+                    
+                if (Input.GetKeyDown(interactionKey) && interactable.Condition())
                 {
                     interactable.Interaction.Invoke();
                 }
