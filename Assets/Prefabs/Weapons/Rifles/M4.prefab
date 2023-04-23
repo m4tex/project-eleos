@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5561349426305759274, guid: d6b608f4b88ece18c90847aedd111358, type: 3}
+  - {fileID: 2100000, guid: 6a3c08ad062aba942a97e27202dcd272, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -236,7 +236,12 @@ MonoBehaviour:
   aimingHeight: -0.179
   recoilPushback: 0.04
   recoilTorque: 0.1
-  soundClips: []
+  soundClips:
+  - {fileID: 8300000, guid: 0f15b184a0bc5aa40b291462f6c6098d, type: 3}
+  reloadingClip: {fileID: 8300000, guid: b66f198a4e951aaf9a5ee9e1e826d62e, type: 3}
+  emptyMagClip: {fileID: 8300000, guid: 5dde1289e96ee5cfeba3e28fa2d403e7, type: 3}
+  multishotCount: 1
+  multishotSpread: 0
 --- !u!1001 &166097688
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,43 +1,34 @@
+using System;
 using UnityEngine;
 
 namespace _Scripts.UI
 {
     public class Menu : MonoBehaviour
     {
-        public Transform newGamePanel, creditsPanel, savesPanel, optionsPanel, coopPanel;
+        public GameObject creditsModal;
+        private bool _creditsOpen = false;
 
-        #region Button Functions
-    
-        public void OnClick_NewGame()
+        private void Update()
         {
-            // SaveManager.NewGame();
-            // LoadingManager.LoadScene()
+            if (_creditsOpen && Input.GetKeyDown(KeyCode.Escape))
+            {
+                creditsModal.SetActive(false);
+                _creditsOpen = false;
+            }
         }
+
         public void OnClick_Play()
         {
-        
-        }
-        public void OnClick_Coop()
-        {
-        
-        }
-        public void OnClick_Saves()
-        {
-        
-        }
-        public void OnClick_Options()
-        {
-        
+            LoadingScreen.LoadLevel();
         }
         public void OnClick_Credits()
         {
-        
+            creditsModal.SetActive(true);
+            _creditsOpen = true;
         }
         public void OnClick_Quit()
         {
-        
+            Application.Quit();
         }
-    
-        #endregion
     }
 }

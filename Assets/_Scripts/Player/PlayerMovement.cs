@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Scripts.Player
 {
@@ -25,6 +27,15 @@ namespace _Scripts.Player
 
         public float maxStamina = 5f, fatigueDelay = 3f;
         private float _fatigueDelayCounter, _currentStamina;
+
+        [Header("Audio")] 
+        public List<AudioClip> footstepSoundClips;
+        public float footstepInterval;
+        public float minimumVelocity;
+        public float pitchVariation = .4f;
+        
+        private AudioSource _audio;
+        private float _footstepIntervalCounter = 0.0f;
 
         [Space] 
         
@@ -62,7 +73,8 @@ namespace _Scripts.Player
         private void Start()
         {
             if (Camera.main == null) throw new Exception("Main Camera doesn't exist!!!");
-            
+
+            _audio = GetComponent<AudioSource>();
             _playerCamera = Camera.main.transform;
             _rb = GetComponent<Rigidbody>();
             _initialSnapPointPos = cameraSnapPoint.localPosition;
@@ -90,7 +102,16 @@ namespace _Scripts.Player
             SnapPointBobbing(x, z, isGrounded);
             
             if (!isGrounded || movementLock) return;
-            
+
+            if (_rb.velocity.magnitude > minimumVelocity && _footstepIntervalCounter <= 0)
+            {
+                int index = Random.Range(0, footstepSoundClips.Count);
+                float pitch = Random.Range(0, pitchVariation);
+                _audio.pitch = 1 - pitch;
+                _audio.PlayOneShot(footstepSoundClips[index]);
+                _footstepIntervalCounter = footstepInterval / (isRunning ? 1.5f : 1);
+            }
+
             //Raycast for slope check
             Physics.Raycast(feetPosition, Vector3.down,
                 out var slopeHit, groundScanRange + 0.2f, groundScanMask);
@@ -114,7 +135,7 @@ namespace _Scripts.Player
             }
             else switch (isRunning)
             {
-                case true when z == 0:
+                case true when z <= 0:
                     isRunning = false;
                     break;
                 case true when _currentStamina <= 0:
@@ -125,7 +146,9 @@ namespace _Scripts.Player
             
             #endregion
         }
-
+        
+        
+        
         private void SnapPointBobbing(float inputX, float inputZ, bool isGrounded)
         {
             var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (isRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
@@ -155,6 +178,8 @@ namespace _Scripts.Player
                 _fatigueDelayCounter -= Time.deltaTime;
             if (_jumpDelayCounter > 0)
                 _jumpDelayCounter -= Time.deltaTime;
+            if (_footstepIntervalCounter > 0)
+                _footstepIntervalCounter -= Time.deltaTime;
         }
     }
 }

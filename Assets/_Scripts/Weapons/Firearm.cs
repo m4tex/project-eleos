@@ -7,6 +7,7 @@ using _Scripts.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace _Scripts.Weapons
 {
@@ -61,6 +62,7 @@ namespace _Scripts.Weapons
 
         [Header("SFX")] 
         public List<AudioClip> soundClips;
+        public AudioClip reloadingClip, emptyMagClip;
         private AudioSource _audioSource;
 
         private bool _isReloading;
@@ -68,7 +70,11 @@ namespace _Scripts.Weapons
         private TMP_Text _ammoIndicator;
         private Camera _camera;
         private WeaponSway _weaponSway;
-        
+
+        [Header("Shotgun (leave default for non-shotguns)")]
+        public int multishotCount = 1;
+        public float multishotSpread = 0;
+
         // Start is called before the first frame update
         private void Start()
         {
@@ -96,8 +102,37 @@ namespace _Scripts.Weapons
 
             var input = isFullAuto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0);
 
-            if (input && currentMagazine != 0 && _fireRateCounter <= 0 && !PlayerMovement.Main.isRunning)
-                Shoot();
+            if (_fireRateCounter <= 0 && !PlayerMovement.Main.isRunning)
+            {
+                if (input && currentMagazine != 0)
+                {
+                    //Pitch variation?
+                    var clip = soundClips[Random.Range(0, soundClips.Count)];
+                    _audioSource.PlayOneShot(clip);
+                    
+                    if (multishotCount == 1)
+                    {
+                        Shoot(_camera.transform.forward);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < multishotCount; i++)
+                        {
+                            Vector3 direction = _camera.transform.forward;
+                            Vector3 offset = new Vector3(Random.Range(-multishotSpread, multishotSpread), Random.Range(-multishotSpread, multishotSpread), 0);
+
+                            direction += offset;
+                            
+                            Shoot(direction, true);
+                        }
+                    }
+                    currentMagazine--;
+                    UpdateAmmo();
+                }
+                //Auto reload removes that option...
+                // else if (Input.GetMouseButtonDown(0))
+                //     _audioSource.PlayOneShot(emptyMagClip);
+            }
 
             if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
                 && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
@@ -132,33 +167,37 @@ namespace _Scripts.Weapons
             PlayerCamera.Main.weaponZoom = false;
         }
         
-        private void Shoot()
+        private void Shoot(Vector3 dir, bool drawRays = false)
         {
+            var direction = dir;
+
             var weaponTransform = transform;
             weaponTransform.localPosition -= new Vector3(0, 0, recoilPushback);
             weaponTransform.localEulerAngles -= new Vector3(recoilTorque, 0, 0);
 
-            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, range))
+            if (Physics.Raycast(_camera.transform.position, direction, out var hit, range))
             {
-                if (hit.transform.TryGetComponent<Zombie>(out var zombie))
+                if (hit.transform.root.TryGetComponent<Zombie>(out var zombie))
                 {
                     zombie.TakeDamage(baseDamage, hit.point.y);
                 } else if (hit.transform.TryGetComponent<Rigidbody>(out var rb))
                 {
-                    rb.AddForce(_camera.transform.forward * impactForce);
+                    rb.AddForce(direction * impactForce);
                 }
             }
 
-            //TODO bullet holes
+            if (drawRays)
+                Debug.DrawLine(_camera.transform.position, hit.point, Color.green, 8f);
 
-            currentMagazine--;
-            UpdateAmmo();
+            //TODO bullet holes
             
             _fireRateCounter = fireRate;
         }
 
         private IEnumerator ReloadCoroutine()
         {
+            _audioSource.PlayOneShot(reloadingClip);
+            
             _isReloading = true;
             _weaponSway.enabled = false;
 

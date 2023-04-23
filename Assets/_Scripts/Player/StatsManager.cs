@@ -14,6 +14,8 @@ namespace _Scripts.Player
             get => _health;
             set
             {
+                if (value < _health)
+                    AudioManager.Damage();
                 UIManager.UpdateHealth(value);
                 _health = value;
             }

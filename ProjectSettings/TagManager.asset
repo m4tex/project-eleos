@@ -14,9 +14,9 @@ TagManager:
   - Walkable
   - Weapon
   - Shootables
-  - 
-  - 
-  - 
+  - AI Collision
+  - AI
+  - Blockade
   - 
   - 
   - 
