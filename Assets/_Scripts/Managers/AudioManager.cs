@@ -7,8 +7,11 @@ public class AudioManager : MonoBehaviour
     public AudioSource playerAudio;
     public List<AudioClip> playerDamageSoundClips;
     public float pitchVariation = .2f;
+    public List<AudioSource> speakers;
     
     private static AudioManager _ins;
+
+    public AudioClip roundEndClip, nextRoundClip;
 
     public static void Damage()
     {
@@ -25,5 +28,21 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         _ins = this;
+    }
+
+    public static void NextRound()
+    {
+        foreach (var speaker in _ins.speakers)
+        {
+            speaker.PlayOneShot(_ins.nextRoundClip);
+        }
+    }
+
+    public static void WaveEnd()
+    {
+        foreach (var speaker in _ins.speakers)
+        {
+            speaker.PlayOneShot(_ins.roundEndClip);
+        }
     }
 }

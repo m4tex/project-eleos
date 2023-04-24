@@ -1,19 +1,39 @@
 using System;
 using System.Collections;
+using _Scripts.Managers;
 using _Scripts.Player;
-using _Scripts.Weapons;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace _Scripts.Enemies
 {
+    public enum ZType
+    {
+        Regular,
+        Spider,
+        Crawler,
+        Big
+    }
+
+    public enum ZState
+    {
+        crawling,
+        woundedCrawl,
+        regular,
+        climbing
+    }
+    
     [RequireComponent(typeof(NavMeshAgent))]
     public class Zombie : MonoBehaviour
     {
         private NavMeshAgent _navAgent;
         private Animator _anim;
+        private static readonly int CrawlBool = Animator.StringToHash("Crawl");
+        private static readonly int CLimbBool = Animator.StringToHash("Climb");
         private static readonly int AttackBool = Animator.StringToHash("Attack");
         private static readonly int DeathTrigger = Animator.StringToHash("Death");
+
 
         private int _health = 100;
         public int Health
@@ -23,11 +43,7 @@ namespace _Scripts.Enemies
             {
                 _health = value;
                 
-                if (_health > 0) return;
-
-                Die();
-
-                // Destroy(gameObject);
+                if (_health <= 0) Die();
             }
         }
         public float speed = 3f;
@@ -37,17 +53,13 @@ namespace _Scripts.Enemies
 
         private bool _attacking = false;
         private bool _isDead = false;
-        
-        [Header("Damage Heights")] //Minimal height for a region to be damaged
-        public Transform bodyHeight;
-        public Transform headHeight;
+        private bool _legshot = false;
 
         private static Transform _playerTransform;
 
-        // Start is called before the first frame update
+        private void Awake() => _anim = GetComponentInChildren<Animator>();
         private void Start()
         {
-            _anim = GetComponentInChildren<Animator>();
             _playerTransform = PlayerMovement.Main.transform;
             _navAgent = GetComponent<NavMeshAgent>();
             _navAgent.speed = speed;
@@ -85,24 +97,9 @@ namespace _Scripts.Enemies
             _attacking = false;
         }
 
-        public void TakeDamage(int damage, float height)
-        {
-            float multiplier;
-
-            if (height >= headHeight.position.y)
-                multiplier = Firearm.HeadShotMultiplier;
-            else if (height >= bodyHeight.position.y)
-                multiplier = Firearm.BodyShotMultiplier;
-            else
-                multiplier = Firearm.LegShotMultiplier;
-
-            StatsManager.Points += (int)(10 * multiplier);
-            Health -= (int)(damage * multiplier);
-        }
-
         private void Die()
         {
-            _navAgent.destination = transform.position;
+            _navAgent.enabled = false;
             _isDead = true;
             _anim.SetTrigger(DeathTrigger);
             
@@ -110,6 +107,46 @@ namespace _Scripts.Enemies
             {
                 componentsInChild.enabled = false;
             }
+
+            LevelManager.instance.zombies.Remove(gameObject);
+        }
+
+        public void Legshot()
+        {
+            if (_legshot) return;
+
+            if (Random.Range(0, 7) == 0)
+                SetState(ZState.woundedCrawl);
+            
+            _legshot = true;
+        }
+
+        public void SetState(ZState state)
+        {
+            switch (state)
+            {
+                case ZState.crawling:
+                case ZState.woundedCrawl:
+                    _anim.SetBool(CrawlBool, true);
+                    _anim.SetBool(CLimbBool, false);
+                    break;
+                case ZState.regular:
+                    _anim.SetBool(CrawlBool, false);
+                    _anim.SetBool(CLimbBool, false);
+                    break;
+                case ZState.climbing:
+                    _anim.SetBool(CrawlBool, false);
+                    _anim.SetBool(CLimbBool, true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Walk"))
+                SetState(ZState.regular);
         }
     }
 }

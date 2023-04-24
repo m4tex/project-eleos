@@ -237,7 +237,7 @@ MonoBehaviour:
   recoilPushback: 0.02
   recoilTorque: 0.1
   soundClips:
-  - {fileID: 8300000, guid: e14c4d3eb97fae941b643b9eaea31488, type: 3}
+  - {fileID: 8300000, guid: 6066a52a88852b732817beda22b98c05, type: 3}
   reloadingClip: {fileID: 8300000, guid: b66f198a4e951aaf9a5ee9e1e826d62e, type: 3}
   emptyMagClip: {fileID: 8300000, guid: 5dde1289e96ee5cfeba3e28fa2d403e7, type: 3}
   multishotCount: 1

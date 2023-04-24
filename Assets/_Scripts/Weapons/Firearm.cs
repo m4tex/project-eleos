@@ -123,7 +123,7 @@ namespace _Scripts.Weapons
 
                             direction += offset;
                             
-                            Shoot(direction, true);
+                            Shoot(direction);
                         }
                     }
                     currentMagazine--;
@@ -134,6 +134,7 @@ namespace _Scripts.Weapons
                 //     _audioSource.PlayOneShot(emptyMagClip);
             }
 
+            //TODO: Auto-reload on empty mag AND a shooting attempt
             if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
                 && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
             {
@@ -174,12 +175,30 @@ namespace _Scripts.Weapons
             var weaponTransform = transform;
             weaponTransform.localPosition -= new Vector3(0, 0, recoilPushback);
             weaponTransform.localEulerAngles -= new Vector3(recoilTorque, 0, 0);
-
+            
             if (Physics.Raycast(_camera.transform.position, direction, out var hit, range))
             {
                 if (hit.transform.root.TryGetComponent<Zombie>(out var zombie))
                 {
-                    zombie.TakeDamage(baseDamage, hit.point.y);
+                    float multiplier;
+
+                    Debug.Log(hit.transform.name);
+                    
+                    if (hit.transform.CompareTag("Head"))
+                    {
+                        Debug.Log("HS");
+                        multiplier = HeadShotMultiplier;
+                    }
+                    else if (hit.transform.CompareTag("Body"))
+                        multiplier = BodyShotMultiplier;
+                    else
+                    {
+                        zombie.Legshot();
+                        multiplier = LegShotMultiplier;
+                    }
+                        
+                    zombie.Health -= (int)(baseDamage * multiplier);
+                    StatsManager.Points += (int)(50 * (multiplier + 0.25f));
                 } else if (hit.transform.TryGetComponent<Rigidbody>(out var rb))
                 {
                     rb.AddForce(direction * impactForce);

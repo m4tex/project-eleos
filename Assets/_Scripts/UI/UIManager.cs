@@ -41,6 +41,7 @@ namespace _Scripts.UI
 
         [Header("Stats")] 
         public TMP_Text pointsIndicator;
+        public TMP_Text waveIndicator;
         public Image healthIndicator;
 
         private static UIManager _ins;
@@ -123,6 +124,11 @@ namespace _Scripts.UI
                 CloseWeaponShop();
                 //Close pause menu
             }
+        }
+
+        public static void Round(int round, bool special = false)
+        {
+            _ins.waveIndicator.text = $"{round} / 8";
         }
     }
 }
