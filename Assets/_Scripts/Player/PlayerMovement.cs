@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,6 +17,8 @@ namespace _Scripts.Player
 
         [Header("General")]
         public float walkSpeed = 12f;
+        public float jumpForce;
+        public float jumpDelay;
         public LayerMask groundScanMask;
 
         [Space]
@@ -27,6 +30,14 @@ namespace _Scripts.Player
 
         public float maxStamina = 5f, fatigueDelay = 3f;
         private float _fatigueDelayCounter, _currentStamina;
+
+        [Space] 
+        
+        [Header("Vaulting")] 
+        public float vaultDuration;
+        // public float vaultHeight;
+        public float vaultDistance;
+        private bool _isVaulting;
 
         [Header("Audio")] 
         public List<AudioClip> footstepSoundClips;
@@ -64,7 +75,7 @@ namespace _Scripts.Player
         public float groundScanRange = 0.1f;
         public float friction = 30f; //Not exactly friction but I couldn't find a better name for it
         public bool movementLock = false;
-
+        
         private float _jumpDelayCounter;
         private Vector3 _move;
         
@@ -101,7 +112,13 @@ namespace _Scripts.Player
 
             SnapPointBobbing(x, z, isGrounded);
             
-            if (!isGrounded || movementLock) return;
+            if (!isGrounded || movementLock || _isVaulting) return;
+
+            // if (_jumpDelayCounter <= 0 && Input.GetKeyDown(KeyCode.Space))
+            // {
+            //     _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //     _jumpDelayCounter = jumpDelay;
+            // }
 
             if (_rb.velocity.magnitude > minimumVelocity && _footstepIntervalCounter <= 0)
             {
@@ -121,7 +138,7 @@ namespace _Scripts.Player
 
             _move.Normalize();
             
-            _move += isRunning ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
+            _move += (isRunning || _isVaulting) ? sprintMultiplier * _playerCamera.forward : Vector3.zero;
             _move = Vector3.ProjectOnPlane(_move, slopeHit.normal);
             
             _rb.velocity = Vector3.MoveTowards( _rb.velocity, _move * (walkSpeed * StatsManager.SpeedFactor), 
@@ -146,9 +163,7 @@ namespace _Scripts.Player
             
             #endregion
         }
-        
-        
-        
+
         private void SnapPointBobbing(float inputX, float inputZ, bool isGrounded)
         {
             var yOffset = Mathf.Sin(_bobbingElapsed * frequency / 1000 * Mathf.PI * (isRunning ? sprintBobbingFrequencyFactor : 1)) * amplitude;
@@ -160,6 +175,27 @@ namespace _Scripts.Player
             else _bobbingElapsed += Time.time;
         }
 
+        public void Vault()
+        {
+            StartCoroutine(VaultAnim());
+        }
+
+        private IEnumerator VaultAnim()
+        {
+            _isVaulting = true;
+            isRunning = false;
+            float elapsed = 0f;
+            while (elapsed < vaultDuration)
+            {
+                _rb.velocity = Vector3.zero;
+                transform.position += (_playerCamera.forward + _playerCamera.up*2) * (Time.deltaTime * vaultDistance);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            _isVaulting = false;
+        }
+        
         // private void DynamicFOV()
         // {
         //     var targetFOV = isRunning ? runningFOV : _rb.velocity.magnitude > 0.1f ? walkingFOV : _initialCameraFOV;

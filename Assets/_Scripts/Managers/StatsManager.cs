@@ -17,9 +17,7 @@ namespace _Scripts.Player
             {
                 if (value <= 0 && !_instance._dead)
                     _instance.Die();
-                
-                
-                
+
                 if (value < _health)
                     AudioManager.Damage();
                 UIManager.UpdateHealth(value);
@@ -36,15 +34,24 @@ namespace _Scripts.Player
 
         private static int _score = 0;
         private bool _dead = false; 
+        
+        // public static int Score
+        // {
+        //     get => _score; 
+        //     set => _score = value;
+        // }
+
+        public static int killedZombies;
+        public static int currentWave = 1;
+        
         public static int Points
         {
             get => _points;
             set
             {
                 UIManager.UpdatePoints(value);
-                _score +=  value - _points;
                 _points = value;
-            }
+            }   
         }
 
         public static float pointGainFactor { get; private set; }
@@ -54,7 +61,6 @@ namespace _Scripts.Player
         private void Awake()
         {
             _instance = this;
-            
         }
 
         private void Start() => Reset();
@@ -127,10 +133,17 @@ namespace _Scripts.Player
         {
             UIManager.ControllsLock = true;
             AudioManager.Death();
-            UIManager.Death(_score);
+            int score = killedZombies * currentWave * 11;
+            int highScore = PlayerPrefs.GetInt("HighScore");
+            if (score > highScore)
+            {
+                highScore = score;
+                PlayerPrefs.SetInt("HighScore", score);
+            }
+            
+            UIManager.Death(score, highScore);
+
             _dead = true;
-            // PlayerMovement.Main.movementLock = true;
-            // PlayerCamera.Main.enabled = false;
         }
 
         public static void Reset()
@@ -139,6 +152,8 @@ namespace _Scripts.Player
             Points = 0;
             _score = 0;
             _instance._dead = false;
+            currentWave = 0;
+            killedZombies = 0;
         }
     }
 }

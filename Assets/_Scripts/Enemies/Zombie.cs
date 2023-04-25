@@ -110,6 +110,7 @@ namespace _Scripts.Enemies
             }
 
             LevelManager.Instance.zombies.Remove(gameObject);
+            StatsManager.killedZombies++;
         }
 
         public void Legshot()

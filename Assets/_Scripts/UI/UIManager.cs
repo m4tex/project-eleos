@@ -17,8 +17,10 @@ namespace _Scripts.UI
         [Header("Death")]
         public Transform deathScreen;
 
+        [FormerlySerializedAs("highScore")] 
+        public TMP_Text score;
         public TMP_Text highScore;
-        
+
         [Header("Interaction")] public Transform interactionPrompt;
         private TMP_Text _promptText;
 
@@ -33,16 +35,22 @@ namespace _Scripts.UI
         };
 
         private static bool _controllsLock;
+        private static bool _mouseVisible;
+        
+        public static bool MouseLocked
+        {
+            get => _mouseVisible;
+            set
+            {
+                Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.Confined;
+                Cursor.visible = value;   
+            }
+        }
 
         public static bool ControllsLock
         {
             get => _controllsLock;
-                set
-            {
-                Cursor.lockState = value ? CursorLockMode.Confined : CursorLockMode.Locked;
-                Cursor.visible = value;
-                _controllsLock = value;
-            }
+            set => _controllsLock = value;
         }
 
         [Header("Stats")] 
@@ -62,7 +70,7 @@ namespace _Scripts.UI
 
         public static void UpdatePoints(int points)
         {
-            _ins.pointsIndicator.text = $"Score: {points}";
+            _ins.pointsIndicator.text = $"Points: {points}";
         }
 
         public static void UpdateHealth(int health)
@@ -138,10 +146,11 @@ namespace _Scripts.UI
             _ins.waveIndicator.text = $"{round} / 8";
         }
 
-        public static void Death(int score)
+        public static void Death(int score, int highScore)
         {
             _ins.deathScreen.gameObject.SetActive(true);
-            _ins.highScore.text = "You scored: " + score;
+            _ins.score.text = "You scored: " + score;
+            _ins.highScore.text = "Your highscore: " + highScore;
         }
 
         public static void OnClick_Replay()

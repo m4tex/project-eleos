@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Enemies;
 using _Scripts.Environment;
+using _Scripts.Player;
 using _Scripts.UI;
-using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -47,6 +47,7 @@ namespace _Scripts.Managers
             
             for (int i = 0; i < count; i++)
             {
+                StatsManager.currentWave++;
                 AudioManager.NextRound();
                 UIManager.Round(i+1);
                 yield return new WaitForSeconds(2f);
@@ -55,7 +56,6 @@ namespace _Scripts.Managers
 
                 for (int j = 0; j < zCount; j += spawners.Count)
                 {
-                    
                     foreach (var spawner in spawners)
                     {
                         Transform spawnerT = spawner.transform;
