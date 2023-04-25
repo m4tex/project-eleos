@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Managers;
 using _Scripts.Player;
 using _Scripts.Weapons;
 using TMPro;
@@ -13,6 +14,11 @@ namespace _Scripts.UI
 {
     public class UIManager : MonoBehaviour
     {
+        [Header("Death")]
+        public Transform deathScreen;
+
+        public TMP_Text highScore;
+        
         [Header("Interaction")] public Transform interactionPrompt;
         private TMP_Text _promptText;
 
@@ -31,7 +37,7 @@ namespace _Scripts.UI
         public static bool ControllsLock
         {
             get => _controllsLock;
-            private set
+                set
             {
                 Cursor.lockState = value ? CursorLockMode.Confined : CursorLockMode.Locked;
                 Cursor.visible = value;
@@ -51,6 +57,7 @@ namespace _Scripts.UI
             _ins = this;
 
             _promptText = interactionPrompt.GetComponentInChildren<TMP_Text>();
+            ControllsLock = false;
         }
 
         public static void UpdatePoints(int points)
@@ -129,6 +136,22 @@ namespace _Scripts.UI
         public static void Round(int round, bool special = false)
         {
             _ins.waveIndicator.text = $"{round} / 8";
+        }
+
+        public static void Death(int score)
+        {
+            _ins.deathScreen.gameObject.SetActive(true);
+            _ins.highScore.text = "You scored: " + score;
+        }
+
+        public static void OnClick_Replay()
+        {
+            LoadingScreen.LoadLevel(() => LevelManager.Instance.Begin(), 1);
+        }
+
+        public static void OnClick_BackToMenu()
+        {
+            LoadingScreen.LoadLevel(() => {}, 0);
         }
     }
 }

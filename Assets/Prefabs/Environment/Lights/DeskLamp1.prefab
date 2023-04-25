@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 3281680320937079587}
   - component: {fileID: 8891595120174026034}
   - component: {fileID: 1529122549033840917}
-  - component: {fileID: 7253420572931767342}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -111,7 +110,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8621179946709530878}
   m_LocalRotation: {x: 0.15741543, y: 0.68936235, z: -0.15741546, w: 0.68936235}
-  m_LocalPosition: {x: -0.022, y: 0.283, z: -0}
+  m_LocalPosition: {x: 0.1493, y: 0.2005, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -130,13 +129,13 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
-  m_Range: 5
-  m_SpotAngle: 30
+  m_Intensity: 40
+  m_Range: 7
+  m_SpotAngle: 46.670547
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -169,13 +168,13 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 10, z: 8, w: -11}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -200,38 +199,3 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
---- !u!114 &7253420572931767342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8621179946709530878}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f24a4aaa0761b45ba25e7e5108e2c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UID: 859136949
-  color: {r: 1, g: 1, b: 1, a: 1}
-  intensity: 3
-  shadowSpread: 0.05
-  cutoff: 5
-  realisticFalloff: 0
-  legacySampling: 1
-  samples: 8
-  projMode: 4
-  cookie: {fileID: 2800000, guid: 3a66602b8cc7fdd4ab57d07b4176432b, type: 3}
-  angle: 30
-  innerAngle: 72.6736
-  cubemap: {fileID: 0}
-  iesFile: {fileID: 0}
-  bitmask: 1
-  bakeToIndirect: 0
-  shadowmask: 0
-  shadowmaskFalloff: 0
-  indirectIntensity: 1
-  falloffMinRadius: 0.01
-  shadowmaskGroupID: 0
-  directionMode: 0
-  maskChannel: 0

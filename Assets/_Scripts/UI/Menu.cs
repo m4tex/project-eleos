@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Managers;
 using UnityEngine;
 
 namespace _Scripts.UI
@@ -19,7 +20,7 @@ namespace _Scripts.UI
 
         public void OnClick_Play()
         {
-            LoadingScreen.LoadLevel();
+            LoadingScreen.LoadLevel(() => LevelManager.Instance.Begin(), 1);
         }
         public void OnClick_Credits()
         {

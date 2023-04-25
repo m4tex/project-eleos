@@ -65,7 +65,7 @@ namespace _Scripts.Weapons
         public AudioClip reloadingClip, emptyMagClip;
         private AudioSource _audioSource;
 
-        private bool _isReloading;
+        public bool isReloading;
         private bool _isAiming;
         private TMP_Text _ammoIndicator;
         private Camera _camera;
@@ -136,12 +136,12 @@ namespace _Scripts.Weapons
 
             //TODO: Auto-reload on empty mag AND a shooting attempt
             if (((input && currentMagazine == 0) || Input.GetKeyDown(KeyCode.R)) 
-                && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !_isReloading)
+                && currentReserveAmmo != 0 && currentMagazine != magazineCapacity && !isReloading)
             {
                 Reload();
             }
 
-            if (Input.GetMouseButtonDown(1) && !_isReloading)
+            if (Input.GetMouseButtonDown(1) && !isReloading)
             {
                 StartAiming();
             }
@@ -182,13 +182,8 @@ namespace _Scripts.Weapons
                 {
                     float multiplier;
 
-                    Debug.Log(hit.transform.name);
-                    
                     if (hit.transform.CompareTag("Head"))
-                    {
-                        Debug.Log("HS");
                         multiplier = HeadShotMultiplier;
-                    }
                     else if (hit.transform.CompareTag("Body"))
                         multiplier = BodyShotMultiplier;
                     else
@@ -217,7 +212,7 @@ namespace _Scripts.Weapons
         {
             _audioSource.PlayOneShot(reloadingClip);
             
-            _isReloading = true;
+            isReloading = true;
             _weaponSway.enabled = false;
 
             float elapsed = 0;
@@ -248,7 +243,7 @@ namespace _Scripts.Weapons
             }
 
             UpdateAmmo();
-            _isReloading = false;
+            isReloading = false;
             _weaponSway.enabled = true;
         }
 
@@ -272,6 +267,15 @@ namespace _Scripts.Weapons
         public void Reload()
         {
             StartCoroutine(ReloadCoroutine());
+        }
+
+        public void AbortReload()
+        {
+            if (!isReloading) return;
+
+            isReloading = false;
+            StopCoroutine(ReloadCoroutine());
+            _weaponSway.enabled = true;
         }
     }
 }

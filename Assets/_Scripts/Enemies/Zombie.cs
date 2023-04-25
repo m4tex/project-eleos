@@ -102,13 +102,14 @@ namespace _Scripts.Enemies
             _navAgent.enabled = false;
             _isDead = true;
             _anim.SetTrigger(DeathTrigger);
+            StopAllCoroutines();
             
             foreach (var componentsInChild in GetComponentsInChildren<BoxCollider>())
             {
                 componentsInChild.enabled = false;
             }
 
-            LevelManager.instance.zombies.Remove(gameObject);
+            LevelManager.Instance.zombies.Remove(gameObject);
         }
 
         public void Legshot()

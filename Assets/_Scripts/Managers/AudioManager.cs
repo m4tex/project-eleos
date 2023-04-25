@@ -11,7 +11,7 @@ public class AudioManager : MonoBehaviour
     
     private static AudioManager _ins;
 
-    public AudioClip roundEndClip, nextRoundClip;
+    public AudioClip roundEndClip, nextRoundClip, deathClip;
 
     public static void Damage()
     {
@@ -44,5 +44,10 @@ public class AudioManager : MonoBehaviour
         {
             speaker.PlayOneShot(_ins.roundEndClip);
         }
+    }
+
+    public static void Death()
+    {
+        _ins.playerAudio.PlayOneShot(_ins.deathClip);
     }
 }

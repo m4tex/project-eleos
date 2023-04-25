@@ -77,10 +77,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f4ad522def1624a94f4ba336dc26f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  attackRange: 1
-  attackSpeed: 1.2
-  attackDamage: 14
+  speed: 2.6
+  attackRange: 1.2
+  attackSpeed: 1.8
+  attackDamage: 34
 --- !u!1001 &8101405922670870297
 PrefabInstance:
   m_ObjectHideFlags: 0

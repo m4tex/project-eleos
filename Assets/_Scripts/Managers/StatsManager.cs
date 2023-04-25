@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using _Scripts.UI;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ namespace _Scripts.Player
             get => _health;
             set
             {
+                if (value <= 0 && !_instance._dead)
+                    _instance.Die();
+                
+                
+                
                 if (value < _health)
                     AudioManager.Damage();
                 UIManager.UpdateHealth(value);
@@ -28,12 +34,15 @@ namespace _Scripts.Player
         private static int _points = 0;
         private static int _health = 100;
 
+        private static int _score = 0;
+        private bool _dead = false; 
         public static int Points
         {
             get => _points;
             set
             {
                 UIManager.UpdatePoints(value);
+                _score +=  value - _points;
                 _points = value;
             }
         }
@@ -45,8 +54,11 @@ namespace _Scripts.Player
         private void Awake()
         {
             _instance = this;
+            
         }
 
+        private void Start() => Reset();
+        
         //Use coroutines to remove an effect after certain amount of time
         private static List<float> _speedEffects = new();
         private static List<float> _damageEffects = new();
@@ -109,6 +121,24 @@ namespace _Scripts.Player
                 Points += 1000;
             if (Input.GetKeyDown(KeyCode.M))
                 Health -= 20;
+        }
+
+        private void Die()
+        {
+            UIManager.ControllsLock = true;
+            AudioManager.Death();
+            UIManager.Death(_score);
+            _dead = true;
+            // PlayerMovement.Main.movementLock = true;
+            // PlayerCamera.Main.enabled = false;
+        }
+
+        public static void Reset()
+        {
+            Health = 100;
+            Points = 0;
+            _score = 0;
+            _instance._dead = false;
         }
     }
 }

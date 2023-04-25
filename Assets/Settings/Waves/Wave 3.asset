@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c155ec6bae0422597241457279dc87e, type: 3}
   m_Name: Wave 3
   m_EditorClassIdentifier: 
-  zombieCount: 25
+  zombieCount: 24
   spawnrate: 2.5
   regularZFilter: 1
   spiderFilter: 1

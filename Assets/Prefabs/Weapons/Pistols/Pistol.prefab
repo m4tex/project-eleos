@@ -166,12 +166,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 1515424007}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 1515424007}
+  m_maskType: 0
 --- !u!1 &683058605813167377
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,12 +388,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe11f5e2de632c5e92cb6655e494176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 63
+  baseDamage: 36
   range: 200
   fireRate: 0.15
   isFullAuto: 0
   magazineCapacity: 18
-  maxReserveAmmo: 72
+  maxReserveAmmo: 54
   ammoType: 0
   reloadDuration: 2
   accuracy: 0.85
@@ -412,3 +412,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: acc3606d540f0e551a07a573f33769f4, type: 3}
   reloadingClip: {fileID: 8300000, guid: b66f198a4e951aaf9a5ee9e1e826d62e, type: 3}
   emptyMagClip: {fileID: 8300000, guid: 5dde1289e96ee5cfeba3e28fa2d403e7, type: 3}
+  isReloading: 0
+  multishotCount: 1
+  multishotSpread: 0

@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace _Scripts.Weapons
@@ -33,6 +34,7 @@ namespace _Scripts.Weapons
         private void Start()
         {
             instance = this;
+                
             
             _loadout = new Component[2]; //Add grenades.length
             _loadout[0] = GetComponentInChildren<Firearm>();
@@ -49,14 +51,18 @@ namespace _Scripts.Weapons
 
         private void ToggleItem(int index)
         {
-            // ReSharper disable once Unity.PerformanceCriticalCodeNullComparison //Not triggered all that often to matter
             if (_loadout[index] == null || index == _currentWeaponIndex)
                 return;
+
+            GetCurrentWeapon().AbortReload();
             
             foreach (var item in _loadout)
+            {
                 item.gameObject.SetActive(false);
+            }
             
             _loadout[index].gameObject.SetActive(true);
+            
 
             _lastWeaponIndex = _currentWeaponIndex;
             _currentWeaponIndex = index;

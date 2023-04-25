@@ -405,12 +405,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe11f5e2de632c5e92cb6655e494176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 8
+  baseDamage: 24
   range: 200
   fireRate: 0.05
   isFullAuto: 0
   magazineCapacity: 2
-  maxReserveAmmo: 32
+  maxReserveAmmo: 18
   ammoType: 2
   reloadDuration: 2
   accuracy: 0.85
@@ -421,14 +421,15 @@ MonoBehaviour:
   wallPrice: 1450
   weaponName: Weapon Name
   aimingZoomAmount: 4
-  aimingDistanceOffset: 0
-  aimingHeight: 0
+  aimingDistanceOffset: 0.3
+  aimingHeight: -0.06
   recoilPushback: 0.15
   recoilTorque: 6
   soundClips:
   - {fileID: 8300000, guid: fb72df78c7554771a848221615c33e94, type: 3}
   reloadingClip: {fileID: 8300000, guid: b66f198a4e951aaf9a5ee9e1e826d62e, type: 3}
   emptyMagClip: {fileID: 8300000, guid: 5dde1289e96ee5cfeba3e28fa2d403e7, type: 3}
+  isReloading: 0
   multishotCount: 8
   multishotSpread: 0.15
 --- !u!1001 &8892727210347614828

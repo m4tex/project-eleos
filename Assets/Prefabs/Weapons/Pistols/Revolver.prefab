@@ -216,12 +216,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe11f5e2de632c5e92cb6655e494176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 20
+  baseDamage: 82
   range: 200
-  fireRate: 0.4
+  fireRate: 0.35
   isFullAuto: 0
   magazineCapacity: 6
-  maxReserveAmmo: 54
+  maxReserveAmmo: 24
   ammoType: 0
   reloadDuration: 2
   accuracy: 0.85
@@ -240,6 +240,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 602f865c63df6f53c87eeacd5c79e555, type: 3}
   reloadingClip: {fileID: 8300000, guid: b66f198a4e951aaf9a5ee9e1e826d62e, type: 3}
   emptyMagClip: {fileID: 8300000, guid: 5dde1289e96ee5cfeba3e28fa2d403e7, type: 3}
+  isReloading: 0
+  multishotCount: 1
+  multishotSpread: 0
 --- !u!1001 &3476838978826594077
 PrefabInstance:
   m_ObjectHideFlags: 0

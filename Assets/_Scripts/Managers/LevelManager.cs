@@ -13,7 +13,7 @@ namespace _Scripts.Managers
 {
     public class LevelManager : MonoBehaviour
     {
-        public static LevelManager instance;
+        public static LevelManager Instance;
 
         public List<Spawner> spawners = new();
         public List<GameObject> zombiePrefabs = new();
@@ -33,9 +33,7 @@ namespace _Scripts.Managers
 
         private void Start()
         {
-            instance = this;
-
-            Begin();
+            Instance = this;
         }
 
         public void Begin()
@@ -49,10 +47,15 @@ namespace _Scripts.Managers
             
             for (int i = 0; i < count; i++)
             {
+                AudioManager.NextRound();
+                UIManager.Round(i+1);
+                yield return new WaitForSeconds(2f);
+                
                 int zCount = wavePatterns[i].zombieCount;
 
                 for (int j = 0; j < zCount; j += spawners.Count)
                 {
+                    
                     foreach (var spawner in spawners)
                     {
                         Transform spawnerT = spawner.transform;
@@ -68,9 +71,6 @@ namespace _Scripts.Managers
 
                 AudioManager.WaveEnd();
                 yield return new WaitForSeconds(12f);
-                AudioManager.NextRound();
-                yield return new WaitForSeconds(2f);
-                UIManager.Round(i);
             }
         }
 
