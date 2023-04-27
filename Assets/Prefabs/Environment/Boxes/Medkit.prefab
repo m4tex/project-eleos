@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41646303e72cb04fbb47cc381bc2287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  refreshTime: 45
 --- !u!64 &3638792718217708024
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -121,14 +121,6 @@ namespace _Scripts.Player
             _instance.speedEffects = _speedEffects;
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.K))
-                Points += 1000;
-            if (Input.GetKeyDown(KeyCode.M))
-                Health -= 20;
-        }
-
         private void Die()
         {
             UIManager.ControllsLock = true;
