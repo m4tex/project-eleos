@@ -138,15 +138,19 @@ namespace _Scripts.Weapons
 
                 Firearm component = (Firearm) weapon;
 
+                if (component.magazineCapacity < 8)
+                    component.currentReserveAmmo += component.magazineCapacity * 5;
+                else
+                    component.currentReserveAmmo += component.magazineCapacity * 3;
 
-                if (component.currentReserveAmmo <
-                    component.maxReserveAmmo + component.magazineCapacity - component.currentMagazine)
-                {
-                    component.currentReserveAmmo = component.maxReserveAmmo + component.magazineCapacity -
-                                                   component.currentReserveAmmo;
-                
-                    GetCurrentWeapon().Reload();
-                }
+                // if (component.currentReserveAmmo <
+                //     component.maxReserveAmmo + component.magazineCapacity - component.currentMagazine)
+                // {
+                //     component.currentReserveAmmo = component.maxReserveAmmo + component.magazineCapacity -
+                //                                    component.currentReserveAmmo;
+                //
+                //     GetCurrentWeapon().Reload();
+                // }
                 
                 component.UpdateAmmo();
             }

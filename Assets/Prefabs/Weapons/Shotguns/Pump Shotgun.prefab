@@ -239,10 +239,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseDamage: 42
   range: 200
-  fireRate: 0.8
+  fireRate: 0.6
   isFullAuto: 0
   magazineCapacity: 12
-  maxReserveAmmo: 48
+  maxReserveAmmo: 36
   ammoType: 2
   reloadDuration: 3.2
   accuracy: 0.85

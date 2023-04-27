@@ -31,14 +31,20 @@ namespace _Scripts.Managers
         [HideInInspector]
         public List<GameObject> zombies = new();
 
+        private Medkit[] _medkits;
+        private AmmoBox[] _ammoBoxes;
+        
         private void Start()
         {
+            _medkits = FindObjectsOfType<Medkit>();
+            _ammoBoxes = FindObjectsOfType<AmmoBox>();
             Instance = this;
         }
 
         public void Begin()
         {
             StartCoroutine(_waves(wavePatterns.Count));
+            // StartCoroutine(_waves(0));
         }
 
         private IEnumerator _waves(int count)
@@ -72,8 +78,33 @@ namespace _Scripts.Managers
                 AudioManager.WaveEnd();
                 yield return new WaitForSeconds(12f);
             }
+            
+            StatsManager.currentWave++;
+            AudioManager.NextRound();
+            UIManager.Round(9, true);
+            StartCoroutine(SpecialWave());
         }
 
+        IEnumerator SpecialWave()
+        {
+            float delay = 1f;
+            
+            while (StatsManager.Health > 0)
+            {
+                if (delay > 0.1f)
+                    delay -= 0.006f;
+
+                foreach (var spawner in spawners)
+                {
+                    Transform spawnerT = spawner.transform;
+                    GameObject zombie = Instantiate(zombiePrefabs[(int)ZType.Regular], spawnerT.position, spawnerT.rotation);
+                    zombie.GetComponent<Zombie>().SetState(spawner.spawningState);
+                    zombies.Add(zombie);
+                }
+                yield return new WaitForSeconds(delay);
+            }
+        }
+        
         private ZType DrawOneType(int wave)
         {
             bool regularFilter = wavePatterns[wave].regularZFilter;

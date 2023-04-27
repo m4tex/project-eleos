@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using _Scripts.Managers;
 using _Scripts.Player;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace _Scripts.Enemies
     }
     
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(AudioSource))]
     public class Zombie : MonoBehaviour
     {
         private NavMeshAgent _navAgent;
@@ -34,13 +36,15 @@ namespace _Scripts.Enemies
         private static readonly int AttackBool = Animator.StringToHash("Attack");
         private static readonly int DeathTrigger = Animator.StringToHash("Death");
 
-
         private int _health = 100;
         public int Health
         {
             get => _health;
             set
             {
+                if (value < _health && Random.Range(0, 25) == 0)
+                    _audioSource.PlayOneShot(damagedAudioClips[Random.Range(0, damagedAudioClips.Count)]);
+
                 _health = value;
                 
                 if (_health <= 0) Die();
@@ -51,6 +55,12 @@ namespace _Scripts.Enemies
         public float attackSpeed;
         public int attackDamage;
 
+        public List<AudioClip> attackAudioClips;
+        public List<AudioClip> mumblingAudioClips;
+        public List<AudioClip> deathAudioClips;
+        public List<AudioClip> damagedAudioClips;
+
+        private AudioSource _audioSource;
         private bool _attacking = false;
         private bool _isDead = false;
         private bool _legshot = false;
@@ -60,13 +70,29 @@ namespace _Scripts.Enemies
         private void Awake() => _anim = GetComponentInChildren<Animator>();
         private void Start()
         {
+            _audioSource = GetComponent<AudioSource>();
             _playerTransform = PlayerMovement.Main.transform;
             _navAgent = GetComponent<NavMeshAgent>();
             _navAgent.speed = speed;
+
+            StartCoroutine(Muttering());
+        }
+
+        IEnumerator Muttering()
+        {
+            while (!_isDead)
+            {
+                if (Random.Range(0, 25) == 0)
+                    _audioSource.PlayOneShot(mumblingAudioClips[Random.Range(0, mumblingAudioClips.Count)]);
+                yield return new WaitForSeconds(1f);
+            }
         }
         
         private void Update()
         {
+            if (StatsManager.Health <= 0)
+                _audioSource.enabled = false;
+            
             var playerPosition = _playerTransform.position;
 
             if (_isDead) return;
@@ -83,6 +109,9 @@ namespace _Scripts.Enemies
                 
                 _attacking = true;
                 StartCoroutine(Attack());
+
+                if (Random.Range(0, 8) == 0)
+                    _audioSource.PlayOneShot(attackAudioClips[Random.Range(0, attackAudioClips.Count)]);
             } else _anim.SetBool(AttackBool, false);
         }
 
@@ -99,6 +128,9 @@ namespace _Scripts.Enemies
 
         private void Die()
         {
+            if (Random.Range(0, 25) == 0)
+                _audioSource.PlayOneShot(deathAudioClips[Random.Range(0, deathAudioClips.Count)]);
+            
             _navAgent.enabled = false;
             _isDead = true;
             _anim.SetTrigger(DeathTrigger);

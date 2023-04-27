@@ -405,14 +405,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe11f5e2de632c5e92cb6655e494176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 24
+  baseDamage: 36
   range: 200
   fireRate: 0.05
   isFullAuto: 0
   magazineCapacity: 2
-  maxReserveAmmo: 18
+  maxReserveAmmo: 12
   ammoType: 2
-  reloadDuration: 2
+  reloadDuration: 1
   accuracy: 0.85
   spread: 2
   impactForce: 200

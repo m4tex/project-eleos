@@ -18,6 +18,7 @@ public class AmmoBox : MonoBehaviour, IInteractable
     };
 
     public AmmoBoxType type;
+    public float refreshTime;
     private bool _available = true;
     private Material _mat;
     private Color _initialColor;
@@ -46,6 +47,7 @@ public class AmmoBox : MonoBehaviour, IInteractable
 
             _available = false;
             _mat.MaterialFade(_fadedColor, 0.25f, this);
+            Invoke(nameof(Refresh), refreshTime);
         });
     }
 

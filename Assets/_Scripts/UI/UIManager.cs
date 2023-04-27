@@ -37,20 +37,25 @@ namespace _Scripts.UI
         private static bool _controllsLock;
         private static bool _mouseVisible;
         
-        public static bool MouseLocked
-        {
-            get => _mouseVisible;
-            set
-            {
-                Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.Confined;
-                Cursor.visible = value;   
-            }
-        }
+        // public static bool MouseLocked
+        // {
+        //     get => _mouseVisible;
+        //     set
+        //     {
+        //         Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.Confined;
+        //         Cursor.visible = value;   
+        //     }
+        // }
 
         public static bool ControllsLock
         {
             get => _controllsLock;
-            set => _controllsLock = value;
+            set
+            {
+                Cursor.lockState = value ? CursorLockMode.Confined : CursorLockMode.Locked;
+                Cursor.visible = value;
+                _controllsLock = value;
+            }
         }
 
         [Header("Stats")] 
@@ -144,8 +149,26 @@ namespace _Scripts.UI
         public static void Round(int round, bool special = false)
         {
             _ins.waveIndicator.text = $"{round} / 8";
+            if (special)
+            {
+                RawImage bg = _ins.waveIndicator.GetComponentInParent<RawImage>();
+                _ins.StartCoroutine(_ins.SpecialRound(bg));
+            }
         }
 
+        IEnumerator SpecialRound(RawImage bg)
+        {
+            Color initial = bg.color;
+            for (float i = 0; i < 1.5f; i += Time.deltaTime)
+            {
+                bg.color = Color.Lerp(initial, Color.black, i/1.5f);
+                
+                yield return null;
+            }
+            
+            bg.color = Color.black;
+        }
+        
         public static void Death(int score, int highScore)
         {
             _ins.deathScreen.gameObject.SetActive(true);
